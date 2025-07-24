@@ -126,8 +126,9 @@ const ProjectsSection = () => {
                                         <Image
                                             src={project.image}
                                             alt={project.title}
-                                            width={600}
-                                            height={400}
+                                            width={600}  // Base width of your image
+                                            height={400} // Base height of your image
+                                            sizes="(max-width: 1024px) 100vw, 50vw" // Add this for responsive sizing
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-xl"
                                         />
 

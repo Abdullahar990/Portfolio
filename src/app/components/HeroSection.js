@@ -15,6 +15,7 @@ const HeroSection = ({ isLoaded }) => {
                                 width={128}
                                 height={128}
                                 className="rounded-full object-cover"
+                                priority
                             />
                         </div>
                     </div>
