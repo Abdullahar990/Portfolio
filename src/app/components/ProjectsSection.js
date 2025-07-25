@@ -19,11 +19,7 @@ const ProjectCard = memo(({ project, index, hoveredProject, setHoveredProject })
     }, []);
 
     return (
-        <div
-            className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto"
-            onMouseEnter={() => setHoveredProject(index)}
-            onMouseLeave={() => setHoveredProject(null)}
-        >
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto" onMouseEnter={() => setHoveredProject(index)} onMouseLeave={() => setHoveredProject(null)}>
             {/* Card Container */}
             <div className="relative h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden group-hover:border-purple-500/30 transition-all duration-500">
 
