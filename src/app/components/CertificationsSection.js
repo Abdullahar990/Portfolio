@@ -69,100 +69,103 @@ const totalProjects = certifications.reduce((sum, cert) => sum + cert.projects, 
 const featuredCerts = certifications.filter(cert => cert.featured);
 const otherCerts = certifications.filter(cert => !cert.featured);
 
-const CertificationCard = memo(({ cert }) => (
-    <div className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto">
-        <div className="group relative will-change-transform rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 group-hover:border-purple-500/30">
-            {cert.featured && (
-                <div className="absolute top-4 left-4 z-20">
-                    <div className="flex items-center space-x-1 px-3 py-1 bg-gradient-to-r from-yellow-600/90 to-orange-600/90 rounded-full text-xs font-semibold text-white border border-white/20">
-                        <Star className="w-3 h-3" />
-                        <span>Featured</span>
-                    </div>
-                </div>
-            )}
-            <div className="absolute top-4 right-4 z-20">
-                <div className="flex items-center space-x-1 px-3 py-1 bg-green-600/80 rounded-full text-xs font-semibold text-white border border-white/20">
-                    <CheckCircle className="w-3 h-3" />
-                    <span>{cert.grade}</span>
-                </div>
-            </div>
-
-            <div className="relative w-full h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center overflow-hidden">
-                <div className="relative w-24 h-20">
-                    <Image
-                        src={cert.image}
-                        alt={cert.title}
-                        fill
-                        loading="lazy"
-                        className="object-contain"
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,..."
-                    />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
-            </div>
-
-            <div className="p-6 flex flex-col justify-between h-[420px]">
-                <div>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-2">
-                        {cert.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
-                        <span className="font-semibold text-purple-400">{cert.issuer}</span>
-                        <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {cert.date}
+function CertificationCard({ cert }) {
+    return (
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto">
+            <div className="group relative will-change-transform rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-300 hover:scale-105 group-hover:border-purple-500/30">
+                {cert.featured && (
+                    <div className="absolute top-4 left-4 z-20">
+                        <div className="flex items-center space-x-1 px-3 py-1 bg-gradient-to-r from-yellow-600/90 to-orange-600/90 rounded-full text-xs font-semibold text-white border border-white/20">
+                            <Star className="w-3 h-3" />
+                            <span>Featured</span>
                         </div>
                     </div>
-                    <p className="text-gray-400 text-sm mb-4">{cert.platform}</p>
-                    <p className="text-gray-300 text-sm mb-4 line-clamp-3">{cert.description}</p>
+                )}
+                <div className="absolute top-4 right-4 z-20">
+                    <div className="flex items-center space-x-1 px-3 py-1 bg-green-600/80 rounded-full text-xs font-semibold text-white border border-white/20">
+                        <CheckCircle className="w-3 h-3" />
+                        <span>{cert.grade}</span>
+                    </div>
+                </div>
 
-                    <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
-                        <div className="flex items-center">
-                            <Users className="w-3 h-3 mr-1" />
-                            <span>{cert.projects} Projects</span>
+                <div className="relative w-full h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center overflow-hidden">
+                    <div className="relative w-24 h-20">
+                        <Image
+                            src={cert.image}
+                            alt={cert.title}
+                            fill
+                            loading="lazy"
+                            className="object-contain"
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,..."
+                        />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+                </div>
+
+                <div className="p-6 flex flex-col justify-between h-[420px]">
+                    <div>
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-2">
+                            {cert.title}
+                        </h3>
+                        <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+                            <span className="font-semibold text-purple-400">{cert.issuer}</span>
+                            <div className="flex items-center">
+                                <Calendar className="w-4 h-4 mr-1" />
+                                {cert.date}
+                            </div>
                         </div>
-                        <span>{cert.hours}</span>
+                        <p className="text-gray-400 text-sm mb-4">{cert.platform}</p>
+                        <p className="text-gray-300 text-sm mb-4 line-clamp-3">{cert.description}</p>
+
+                        <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+                            <div className="flex items-center">
+                                <Users className="w-3 h-3 mr-1" />
+                                <span>{cert.projects} Projects</span>
+                            </div>
+                            <span>{cert.hours}</span>
+                        </div>
+
+                        <div className="flex flex-wrap gap-1 mb-4">
+                            {cert.skills.slice(0, 3).map(skill => (
+                                <span
+                                    key={skill}
+                                    className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 rounded text-xs font-medium border border-purple-500/20"
+                                >
+                                    {skill}
+                                </span>
+                            ))}
+                            {cert.skills.length > 3 && (
+                                <span
+                                    className="px-2 py-1 bg-gray-500/20 text-gray-300 rounded text-xs"
+                                    title={cert.skills.slice(3).join(', ')}
+                                >
+                                    +{cert.skills.length - 3}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-1 mb-4">
-                        {cert.skills.slice(0, 3).map(skill => (
-                            <span
-                                key={skill}
-                                className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 rounded text-xs font-medium border border-purple-500/20"
-                            >
-                                {skill}
-                            </span>
-                        ))}
-                        {cert.skills.length > 3 && (
-                            <span
-                                className="px-2 py-1 bg-gray-500/20 text-gray-300 rounded text-xs"
-                                title={cert.skills.slice(3).join(', ')}
-                            >
-                                +{cert.skills.length - 3}
-                            </span>
-                        )}
+                    <div className="mt-auto">
+                        <a
+                            href={cert.verifyLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-sm font-medium"
+                        >
+                            <ExternalLink className="w-4 h-4" />
+                            <span>Verify</span>
+                        </a>
                     </div>
                 </div>
 
-                <div className="mt-auto">
-                    <a
-                        href={cert.verifyLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full flex items-center justify-center space-x-2 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-sm font-medium"
-                    >
-                        <ExternalLink className="w-4 h-4" />
-                        <span>Verify</span>
-                    </a>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
             </div>
-
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         </div>
-    </div>
-));
+    );
+}
 CertificationCard.displayName = 'CertificationCard';
+const MemoizedCertificationCard = memo(CertificationCard);
 
 const CertificationsSection = () => {
     return (
@@ -185,7 +188,7 @@ const CertificationsSection = () => {
                     </h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {featuredCerts.map(cert => (
-                            <CertificationCard key={cert.credentialId} cert={cert} />
+                            <MemoizedCertificationCard key={cert.credentialId} cert={cert} />
                         ))}
                     </div>
                 </div>
@@ -198,7 +201,7 @@ const CertificationsSection = () => {
                         </h3>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {otherCerts.map(cert => (
-                                <CertificationCard key={cert.credentialId} cert={cert} />
+                                <MemoizedCertificationCard key={cert.credentialId} cert={cert} />
                             ))}
                         </div>
                     </div>
