@@ -9,7 +9,7 @@ const Navigation = () => {
                         Muhammad Abdullah
                     </div>
                     <div className="hidden md:flex space-x-8">
-                        {['Home', 'About', 'Skills', 'Projects', 'Contact'].map((item) => (
+                        {['Home', 'About', 'Skills', 'Experience', 'Projects', 'Certifications', 'Contact'].map((item) => (
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}

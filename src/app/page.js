@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import useHasMounted from './hooks/useHasMounted'; 
+import useHasMounted from './hooks/useHasMounted';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
 
 const AboutSection = dynamic(() => import('./components/AboutSection'));
 const SkillsSection = dynamic(() => import('./components/SkillsSection'));
+const ExperienceSection = dynamic(() => import('./components/ExperienceSection'));
 const ProjectsSection = dynamic(() => import('./components/ProjectsSection'));
+const CertificationsSection = dynamic(() => import('./components/CertificationsSection'));
 const ContactSection = dynamic(() => import('./components/ContactSection'));
 const Footer = dynamic(() => import('./components/Footer'));
 
@@ -66,7 +68,9 @@ const Portfolio = () => {
       <HeroSection isLoaded={isLoaded} />
       <AboutSection />
       <SkillsSection isLoaded={isLoaded} />
+      <ExperienceSection />
       <ProjectsSection />
+      <CertificationsSection />
       <ContactSection />
       <Footer />
 
