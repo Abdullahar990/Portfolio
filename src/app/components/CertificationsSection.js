@@ -162,6 +162,7 @@ const CertificationCard = memo(({ cert }) => (
         </div>
     </div>
 ));
+CertificationCard.displayName = 'CertificationCard';
 
 const CertificationsSection = () => {
     return (
