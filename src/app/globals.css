@@ -24,3 +24,6 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure Tailwind is purging unused styles for production builds */
+/* If using Tailwind v3+, this is handled automatically via content in tailwind.config.js */

@@ -55,6 +55,7 @@ const ProjectCard = memo(({ project, index, hoveredProject, setHoveredProject })
                             placeholder="blur"
                             blurDataURL="data:image/jpeg;base64,..."
                             priority={index < 2}
+                            loading={index < 2 ? undefined : "lazy"}
                         />
 
 

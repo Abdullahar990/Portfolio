@@ -95,6 +95,8 @@ const CertificationCard = memo(({ cert }) => (
                         fill
                         loading="lazy"
                         className="object-contain"
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,..."
                     />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
