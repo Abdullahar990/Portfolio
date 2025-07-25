@@ -164,6 +164,7 @@ function CertificationCard({ cert }) {
         </div>
     );
 }
+
 CertificationCard.displayName = 'CertificationCard';
 const MemoizedCertificationCard = memo(CertificationCard);
 
@@ -229,5 +230,7 @@ const CertificationsSection = () => {
         </section>
     );
 };
+
+CertificationsSection.displayName = 'CertificationsSection';
 
 export default CertificationsSection;
