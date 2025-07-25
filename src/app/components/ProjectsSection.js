@@ -48,18 +48,20 @@ const ProjectCard = memo(({ project, index, hoveredProject, setHoveredProject })
                 {/* Content Layout */}
                 <div className="flex flex-col lg:flex-row">
                     {/* Image Section */}
-                    <div className="relative overflow-hidden lg:w-1/2 h-80 lg:h-96">
+                    <div className="relative w-full lg:w-1/2 h-80 lg:h-96 overflow-hidden">
                         <Image
                             src={project.image}
                             alt={`${project.title} - ${project.category} project`}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            sizes="(max-width: 1024px) 100vw, 50vw"
-                            quality={60} // reduce for better speed
-                            priority={index < 2} // auto-manage eager vs lazy
+                            width={800}
+                            height={600}
+                            className="object-cover w-full h-full transition-transform duration-500 ease-in-out group-hover:scale-105"
+                            quality={60}
                             placeholder="blur"
                             blurDataURL="data:image/jpeg;base64,..."
+                            priority={index < 2}
                         />
+
+
 
 
                         {/* Gradient Overlay */}
