@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { Github, Star, Calendar, Cpu, Code, Database, Globe } from 'lucide-react';
 import Image from 'next/image';
 
-const ProjectsSection = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [hoveredProject, setHoveredProject] = useState(null);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoaded(true);
-        }, 100);
-        return () => clearTimeout(timer);
-    }, []);
-
-    const getCategoryIcon = (category) => {
+const ProjectCard = memo(({ project, index, hoveredProject, setHoveredProject }) => {
+    const getCategoryIcon = useCallback((category) => {
         switch (category) {
             case 'AI/ML':
                 return <Cpu className="w-4 h-4" />;
@@ -26,7 +16,119 @@ const ProjectsSection = () => {
             default:
                 return <Code className="w-4 h-4" />;
         }
-    };
+    }, []);
+
+    return (
+        <div
+            className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto"
+            onMouseEnter={() => setHoveredProject(index)}
+            onMouseLeave={() => setHoveredProject(null)}
+        >
+            {/* Card Container */}
+            <div className="relative h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden group-hover:border-purple-500/30 transition-all duration-500">
+
+                {/* Featured Badge */}
+                {project.featured && (
+                    <div className="absolute top-4 left-4 z-20">
+                        <div className="flex items-center space-x-1 px-3 py-1 bg-gradient-to-r from-purple-600/90 to-pink-600/90 backdrop-blur-sm rounded-full text-xs font-semibold text-white border border-white/20">
+                            <Star className="w-3 h-3" />
+                            <span>Featured</span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Category Badge */}
+                <div className="absolute top-4 right-4 z-20">
+                    <div className="flex items-center space-x-1 px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-gray-300 border border-white/10">
+                        {getCategoryIcon(project.category)}
+                        <span>{project.category}</span>
+                    </div>
+                </div>
+
+                {/* Content Layout */}
+                <div className="flex flex-col lg:flex-row">
+                    {/* Image Section */}
+                    <div className="relative overflow-hidden lg:w-1/2 h-80 lg:h-96">
+                        <Image
+                            src={project.image}
+                            alt={`${project.title} - ${project.category} project`}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                            quality={75}
+                            loading={index < 2 ? "eager" : "lazy"}
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyBhWVl3XTauumBrEziWEjyO2lQf//Z"
+                        />
+
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-slate-900/90"></div>
+
+                        {/* Hover Overlay */}
+                        <div className={`absolute inset-0 bg-gradient-to-t from-purple-900/80 via-purple-900/10 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-purple-900/80 transition-opacity duration-500 ${
+                            hoveredProject === index ? 'opacity-100' : 'opacity-0'
+                        }`}></div>
+
+                        {/* Project Stats */}
+                        <div className="absolute bottom-4 left-4 flex items-center space-x-4 text-white/80 text-sm">
+                            <div className="flex items-center space-x-1">
+                                <Star className="w-4 h-4" />
+                                <span>{project.stats.stars}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                                <Calendar className="w-4 h-4" />
+                                <span>{project.stats.commits}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-8 lg:w-1/2 flex flex-col justify-between">
+                        <div className="flex-grow">
+                            <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-white group-hover:text-purple-300 transition-colors duration-300">
+                                {project.title}
+                            </h3>
+
+                            <p className="text-gray-400 mb-6 leading-relaxed text-base lg:text-lg">
+                                {project.description}
+                            </p>
+
+                            {/* Tech Stack */}
+                            <div className="flex flex-wrap gap-2 mb-8">
+                                {project.tech.map((tech) => (
+                                    <span
+                                        key={tech}
+                                        className="px-3 py-1.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 rounded-lg text-sm font-medium border border-purple-500/20 backdrop-blur-sm"
+                                    >
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <div className="flex justify-center">
+                            <a
+                                href={project.github}
+                                className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-base font-medium shadow-lg hover:shadow-purple-500/25 group/btn"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                <Github className="w-5 h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
+                                <span>View Code</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+});
+
+ProjectCard.displayName = 'ProjectCard';
+
+const ProjectsSection = () => {
+    const [hoveredProject, setHoveredProject] = useState(null);
 
     const projects = [
         {
@@ -85,135 +187,16 @@ const ProjectsSection = () => {
                     </p>
                 </div>
 
-                {/* Projects Grid - Fixed to single column */}
+                {/* Projects Grid */}
                 <div className="space-y-8">
                     {projects.map((project, index) => (
-                        <div
+                        <ProjectCard
                             key={project.title}
-                            className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] max-w-4xl lg:max-w-6xl mx-auto"
-                            style={{
-                                animationDelay: `${index * 0.15}s`,
-                                animation: isLoaded ? 'fadeInUp 0.8s ease-out forwards' : 'none'
-                            }}
-                            onMouseEnter={() => setHoveredProject(index)}
-                            onMouseLeave={() => setHoveredProject(null)}
-                        >
-                            {/* Card Container */}
-                            <div className="relative h-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden group-hover:border-purple-500/30 transition-all duration-500">
-
-                                {/* Featured Badge */}
-                                {project.featured && (
-                                    <div className="absolute top-4 left-4 z-20">
-                                        <div className="flex items-center space-x-1 px-3 py-1 bg-gradient-to-r from-purple-600/90 to-pink-600/90 backdrop-blur-sm rounded-full text-xs font-semibold text-white border border-white/20">
-                                            <Star className="w-3 h-3" />
-                                            <span>Featured</span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Category Badge */}
-                                <div className="absolute top-4 right-4 z-20">
-                                    <div className="flex items-center space-x-1 px-3 py-1 bg-black/60 backdrop-blur-sm rounded-full text-xs text-gray-300 border border-white/10">
-                                        {getCategoryIcon(project.category)}
-                                        <span>{project.category}</span>
-                                    </div>
-                                </div>
-
-                                {/* Content Layout - Side by side on desktop */}
-                                <div className="flex flex-col lg:flex-row">
-                                    {/* Image Section */}
-                                    <div className="relative overflow-hidden lg:w-1/2 h-80 lg:h-96">
-                                        <Image
-                                            src={project.image}
-                                            alt={project.title}
-                                            width={600}  // Base width of your image
-                                            height={400} // Base height of your image
-                                            sizes="(max-width: 1024px) 100vw, 50vw" // Add this for responsive sizing
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-xl"
-                                        />
-
-                                        {/* Gradient Overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-slate-900/90"></div>
-
-                                        {/* Hover Overlay */}
-                                        <div className={`absolute inset-0 bg-gradient-to-t from-purple-900/80 via-purple-900/10 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-purple-900/80 transition-opacity duration-500 ${hoveredProject === index ? 'opacity-100' : 'opacity-0'
-                                            }`}></div>
-
-                                        {/* Project Stats */}
-                                        <div className="absolute bottom-4 left-4 flex items-center space-x-4 text-white/80 text-sm">
-                                            <div className="flex items-center space-x-1">
-                                                <Star className="w-4 h-4" />
-                                                <span>{project.stats.stars}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-1">
-                                                <Calendar className="w-4 h-4" />
-                                                <span>{project.stats.commits}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Content Section */}
-                                    <div className="p-8 lg:w-1/2 flex flex-col justify-between">
-                                        <div className="flex-grow">
-                                            <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-white group-hover:text-purple-300 transition-colors duration-300">
-                                                {project.title}
-                                            </h3>
-
-                                            <p className="text-gray-400 mb-6 leading-relaxed text-base lg:text-lg">
-                                                {project.description}
-                                            </p>
-
-                                            {/* Tech Stack */}
-                                            <div className="flex flex-wrap gap-2 mb-8">
-                                                {project.tech.map((tech) => (
-                                                    <span
-                                                        key={tech}
-                                                        className="px-3 py-1.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 rounded-lg text-sm font-medium border border-purple-500/20 backdrop-blur-sm"
-                                                    >
-                                                        {tech}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {/* Action Button */}
-                                        <div className="flex justify-center">
-                                            <a
-                                                href={project.github}
-                                                className="flex items-center justify-center space-x-2 px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 text-base font-medium shadow-lg hover:shadow-purple-500/25 group/btn"
-                                            >
-                                                <Github className="w-5 h-5 group-hover/btn:rotate-12 transition-transform duration-300" />
-                                                <span>View Code</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Decorative Border Animation */}
-                                <div className={`absolute inset-0 rounded-2xl transition-opacity duration-500 pointer-events-none ${hoveredProject === index ? 'opacity-100' : 'opacity-0'
-                                    }`}>
-                                    <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 bg-clip-border animate-pulse"></div>
-                                </div>
-                            </div>
-
-                            {/* Floating Particles Effect */}
-                            {hoveredProject === index && (
-                                <div className="absolute inset-0 pointer-events-none">
-                                    {[...Array(6)].map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className="absolute w-2 h-2 bg-purple-400/60 rounded-full animate-ping"
-                                            style={{
-                                                left: `${20 + i * 15}%`,
-                                                top: `${10 + (i % 2) * 60}%`,
-                                                animationDelay: `${i * 0.2}s`,
-                                                animationDuration: '2s'
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                            project={project}
+                            index={index}
+                            hoveredProject={hoveredProject}
+                            setHoveredProject={setHoveredProject}
+                        />
                     ))}
                 </div>
 
@@ -222,6 +205,8 @@ const ProjectsSection = () => {
                     <a
                         href="https://github.com/Abdullahar990"
                         className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full hover:from-purple-600/30 hover:to-pink-600/30 transform hover:scale-105 transition-all duration-300 border border-purple-500/30 hover:border-purple-400/50 text-lg font-semibold"
+                        rel="noopener noreferrer"
+                        target="_blank"
                     >
                         <span>View All Projects</span>
                         <Github className="w-5 h-5" />
