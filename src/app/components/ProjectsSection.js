@@ -155,7 +155,7 @@ const ProjectsSection = () => {
             description: 'A hotel management website that handles reservations, room listings, and admin panel. Built using Next.js, MongoDB, Node.js, and Bootstrap.',
             tech: ['Next.js', 'MongoDB', 'Node.js', 'Bootstrap'],
             image: '/Hotel.jpg',
-            github: '#',
+            github: 'https://github.com/Abdullahar990/check-inn-chill-out',
             featured: true,
             category: 'Full Stack',
             stats: { stars: 18, commits: 89 }
