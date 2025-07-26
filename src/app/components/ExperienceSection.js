@@ -17,7 +17,7 @@ const ExperienceSection = () => {
                 "Collaborated with senior developers to learn industry-standard Python practices"
             ],
             technologies: [
-                "Python", "NumPy", "Pandas", "Tkinter", "Matplotlib", "CSV", "Jupyter Notebook"
+                "Python", "NumPy", "Pandas", "Tkinter", "Matplotlib", "Jupyter Notebook"
             ]
         },
         {
