@@ -1,34 +1,98 @@
-# Muhammad Abdullah – Portfolio  
-**FAST BSCS (5G Batch), Roll 22L-6836**  
-GitHub: [@Abdullahar990](https://github.com/Abdullahar990)  
+# 🌐 Muhammad Abdullah – Portfolio
 
-## 👋 About Me  
-Hello! I’m Muhammad Abdullah, a passionate computer science student currently enrolled in FAST’s BSCS 5G batch (roll 22L-6836). I have experience across web development, automation, AI/ML, and software engineering. I’ve developed practical projects during internships and academic coursework, and I love applying what I learn to build things that make a difference.
+👋 Hi there! I’m **Muhammad Abdullah**, a passionate **Computer Science student at FAST University Lahore (Batch 2022–2026)**.  
+I specialize in **Artificial Intelligence, Machine Learning, and Full-Stack Web Development**, and I love building intelligent, efficient, and user-friendly systems.
 
-### Highlights of my journey  
-- Built an image-gallery using HTML, CSS & JavaScript as part of an internship at CodeAlpha.  
-- At Mindbridge, I managed high-volume customer tickets for Uber Chat Support (Mar 2015 – Sep 2017), handling refunds and investigations.  
-- Worked as a telesales rep at Hightech Communications (Feb 2014 – Jan 2015) and as a sales executive at The Resource Group (TV/Internet/Phone solutions) — gaining strong communication and pressure-management skills.  
-- Currently engaged in AI & ML internship work, developing a variety of projects including a background-removal Streamlit app, a disease-prediction web app, a hotel-management system, and more.  
-- My long-term goal: create intelligent mobile-centric applications (e.g., accident alerts via smartphone) and advance in fields like mobile edge computing, blockchain and wide-area network connectivity for cloud.
+---
 
-## 📂 This Repository  
-This repository contains my personal portfolio built with Next.js, featuring sections such as About Me, Skills, Projects, Contact Info, and more.
+## 🧠 About Me
 
-### Key features  
-- Built using Next.js and tailored for performance, responsiveness and modern UX.  
-- Modular structure: organised under `public/`, `src/app/`, and configuration files for Next.js, ESLint, PostCSS, etc. :contentReference[oaicite:1]{index=1}  
-- Ready for deployment via Vercel (demo link: [portfolio-phi-lyart-34.vercel.app](https://portfolio-phi-lyart-34.vercel.app)). :contentReference[oaicite:3]{index=3}  
-- Easily editable: you can run `npm run dev` (or `yarn dev` / `pnpm dev`) and start customizing `app/page.js` and other components. :contentReference[oaicite:4]{index=4}
+I’m an aspiring **AI Engineer** and **Full-Stack Developer** with experience across computer vision, deep learning, and modern web technologies.  
+My work revolves around building intelligent systems that solve real-world problems, from accident detection to disease prediction and hotel management.
 
-### How to get started  
+- 🎓 **Bachelor of Computer Science** – FAST University, Lahore (2022–2026)
+- 💻 Passionate about **AI, ML, Deep Learning, and Cloud Technologies**
+- 🚀 Currently exploring **MLOps**, **Edge AI**, and **Smart Systems**
+
+---
+
+## 💼 Experience
+
+### 🔹 **Computer Vision & Deep Learning Intern** – *ML-Bench* (Jun 2025 – Aug 2025)
+- Built deep learning pipelines for image analysis using **CNNs**, **OpenCV**, and **TensorFlow**  
+- Tuned hyperparameters to improve model accuracy and efficiency  
+- Collaborated with cross-functional teams to deploy ML models in production  
+
+### 🔹 **AI Intern** – *Datics AI* (Jul 2024 – Sep 2024)
+- Developed **NLP models** using Python, Pandas, and Scikit-learn  
+- Built chatbot prototypes capable of handling contextual queries  
+- Performed data preprocessing, feature engineering, and evaluation  
+
+### 🔹 **Web Developer** – *CodeAlpha* (Jun 2024 – Jul 2024)
+- Designed and developed **responsive UIs** using React, HTML, CSS, and JavaScript  
+- Improved website performance and accessibility  
+- Focused on modern UX with optimized page load times  
+
+---
+
+## 🧰 Skills
+
+**Languages:** Python, JavaScript, C++, C, SQL  
+**Frameworks & Libraries:** TensorFlow, Keras, Scikit-learn, OpenCV  
+**Web Technologies:** React, Next.js, Node.js, Express, Flask  
+**Databases:** PostgreSQL, MongoDB, MySQL  
+**Tools:** Git, Docker, Bootstrap, Tailwind CSS  
+**Practices:** Agile, Scrum, OOP, SOLID Principles  
+
+---
+
+## 🚀 Featured Projects
+
+### 🧩 [Vehicle Detection System](#)
+> **Tech:** Flask, YOLOv11, OpenCV  
+Real-time vehicle detection with analytics dashboard for traffic monitoring and entry/exit statistics.
+
+### 🏨 [Check INN, Chill Out](#)
+> **Tech:** MERN Stack  
+Full-stack hotel management system featuring booking, room management, and JWT-based authentication.
+
+### 🧬 [Disease Prediction System](#)
+> **Tech:** Python, ML  
+Predicts diseases using patient symptoms and trained machine learning models.
+
+### ⚙️ [Spare Parts Management System](#)
+> **Tech:** PHP, MySQL, Bootstrap  
+Dynamic inventory tracking system with responsive UI and real-time stock management.
+
+---
+
+## 🏅 Certifications
+- **Deep Learning Specialization (5 Courses)**  
+  *Neural Networks, Hyperparameter Tuning, Structuring ML Projects, CNNs, Sequence Models*  
+  *(Coursera / Andrew Ng)*
+
+---
+
+## 🌍 Portfolio Overview
+
+This repository showcases my **personal developer portfolio**, built using **Next.js**.  
+It highlights my experience, technical skills, and featured projects, designed to create a strong professional presence.
+
+### 🔧 Tech Stack
+- **Frontend:** Next.js, React, Tailwind CSS  
+- **Backend:** Node.js API routes  
+- **Deployment:** Vercel  
+- **Version Control:** Git & GitHub  
+
+### ⚡ Setup Instructions
 ```bash
-# Clone this repo
+# Clone repository
 git clone https://github.com/Abdullahar990/Portfolio.git
 cd Portfolio
 
 # Install dependencies
-npm install   # or yarn install / pnpm install
+npm install
 
-# Launch development server
-npm run dev   # or yarn dev / pnpm dev
+# Run development server
+npm run dev
+
