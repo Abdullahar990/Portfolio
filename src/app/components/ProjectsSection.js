@@ -7,8 +7,6 @@ const ProjectCard = memo(({ project, index, hoveredProject, setHoveredProject })
         switch (category) {
             case 'AI/ML':
                 return <Cpu className="w-4 h-4" />;
-            case 'Computer Vision':
-                return <Code className="w-4 h-4" />;
             case 'Full Stack':
                 return <Database className="w-4 h-4" />;
             case 'Web Development':
@@ -131,6 +129,16 @@ const ProjectsSection = () => {
 
     const projects = [
         {
+            title: 'Guardian Sense',
+            description: 'Architected an AI-driven emergency response system using smartphone sensors. TensorFlow classifier achieved 92% detection accuracyBuilt cross-platform Flutter app and RESTful Node.js backend supporting 50+ concurrent users',
+            tech: ['Next.js', 'Node.js', 'Flutter', 'MongoDB', 'TensorFlow'],
+            image: '/GS.jpg',
+            github: 'https://github.com/Abdullahar990/Disease-Prediction-App',
+            featured: true,
+            category: 'AI/ML/Mobile/Full Stack',
+            stats: { stars: 24, commits: 156 }
+        },
+        {
             title: 'Disease Prediction App',
             description: 'A web application that predicts diseases based on user symptoms using KNN algorithm. Built with Python Flask, NumPy, and Pandas.',
             tech: ['Python', 'Flask', 'NumPy', 'Pandas', 'KNN'],
@@ -139,16 +147,6 @@ const ProjectsSection = () => {
             featured: true,
             category: 'AI/ML',
             stats: { stars: 24, commits: 156 }
-        },
-        {
-            title: 'Traffic Detection System',
-            description: 'An intelligent traffic monitoring system using YOLOv11 for real-time vehicle detection. Built with Python Flask, NumPy, and Pandas.',
-            tech: ['Python', 'Flask', 'YOLOv11', 'NumPy', 'Pandas'],
-            image: '/Traffic.jpg',
-            github: 'https://github.com/Abdullahar990/vehicle_counter_app/tree/main/Desktop/vehicle_counter_app',
-            featured: true,
-            category: 'Computer Vision',
-            stats: { stars: 31, commits: 203 }
         },
         {
             title: 'Check INN, Chill Out',
