@@ -1,29 +1,393 @@
 @import "tailwindcss";
 
+/* ── Monitoring Console Palette ── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0A0D12;
+  --bg-alt: #0F1218;
+  --surface: #151921;
+  --surface-hover: #1C2130;
+  --signal: #3DD6C4;
+  --signal-glow: rgba(61, 214, 196, 0.15);
+  --signal-strong: rgba(61, 214, 196, 0.35);
+  --alert: #F5A623;
+  --ink: #E7E9ED;
+  --ink-dim: #8A909C;
+  --surface-border: #1E2430;
+  --gradient-1: #3DD6C4;
+  --gradient-2: #1A8FE3;
+  --gradient-3: #6C5CE7;
 }
 
+/* Register tokens for Tailwind v4 */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-signal: var(--signal);
+  --color-signal-glow: var(--signal-glow);
+  --color-signal-strong: var(--signal-strong);
+  --color-alert: var(--alert);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-surface-border: var(--surface-border);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* Ensure Tailwind is purging unused styles for production builds */
-/* If using Tailwind v3+, this is handled automatically via content in tailwind.config.js */
+/* ── Typography Utilities ── */
+.font-display {
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* ── Focus States ── */
+*:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-dim);
+}
+
+/* ── Animated Grid Background ── */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--surface-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--surface-border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.3;
+}
+
+/* ── Glow Orbs ── */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.glow-orb-1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--signal-glow), transparent 70%);
+  top: 10%;
+  right: -5%;
+  animation-delay: 0s;
+}
+
+.glow-orb-2 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(108, 92, 231, 0.1), transparent 70%);
+  bottom: 20%;
+  left: -5%;
+  animation-delay: -4s;
+}
+
+.glow-orb-3 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(26, 143, 227, 0.08), transparent 70%);
+  top: 50%;
+  left: 40%;
+  animation-delay: -2s;
+}
+
+/* ── 3D Card Effect ── */
+.card-3d {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.card-3d-inner {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d-inner:hover {
+  transform: translateY(-4px) rotateX(2deg) rotateY(-1deg);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 40px var(--signal-glow);
+}
+
+/* ── Animated Gradient Border ── */
+.gradient-border {
+  position: relative;
+  background: var(--surface);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    var(--signal) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(108, 92, 231, 0.5) 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* ── Animated Gradient Border (spinning) ── */
+.animated-border {
+  position: relative;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2), var(--gradient-3), var(--gradient-1));
+  background-size: 300% 300%;
+  animation: gradientShift 4s ease infinite;
+}
+
+.animated-border-square {
+  position: relative;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2), var(--gradient-3), var(--gradient-1));
+  background-size: 300% 300%;
+  animation: gradientShift 4s ease infinite;
+}
+
+/* ── Floating Animation ── */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ── Pulse Glow ── */
+.pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* ── Shimmer Effect for text ── */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--ink) 0%,
+    var(--signal) 25%,
+    var(--ink) 50%,
+    var(--signal) 75%,
+    var(--ink) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* ── Glowing Signal Text ── */
+.text-glow {
+  text-shadow: 0 0 20px var(--signal-glow), 0 0 40px rgba(61, 214, 196, 0.05);
+}
+
+/* ── Stagger children animation ── */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: fadeSlideUp 0.6s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.7s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.8s; }
+
+/* ── Keyframes ── */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -20px) scale(1.05); }
+  66% { transform: translate(-15px, 15px) scale(0.95); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--signal-glow), 0 0 40px rgba(61, 214, 196, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 30px var(--signal-strong), 0 0 60px var(--signal-glow);
+  }
+}
+
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseDraw {
+  0% { stroke-dashoffset: 1000; opacity: 0.3; }
+  60% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0.7; }
+}
+
+@keyframes statusDotFade {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes statusDotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--signal); }
+  50% { opacity: 0.6; box-shadow: 0 0 12px var(--signal-strong); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-pulse-draw {
+  animation: pulseDraw 2s ease-out forwards;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.animate-status-dot {
+  animation: statusDotFade 0.5s ease-out 1.5s forwards, statusDotPulse 3s ease-in-out 2s infinite;
+  opacity: 0;
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* ── Scanline Effect ── */
+.scanline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    transparent 0%,
+    rgba(61, 214, 196, 0.02) 50%,
+    transparent 100%
+  );
+  height: 4px;
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Noise Texture Overlay ── */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-pulse-draw { stroke-dashoffset: 0; opacity: 0.7; }
+  .animate-status-dot { opacity: 1; }
+  .animate-fade-slide-up, .animate-fade-in { opacity: 1; transform: none; }
+  .stagger-children > * { opacity: 1; transform: none; }
+  .glow-orb { animation: none; }
+  .float { animation: none; }
+  .card-3d-inner:hover { transform: none; }
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: rgba(61, 214, 196, 0.25);
+  color: var(--ink);
+}

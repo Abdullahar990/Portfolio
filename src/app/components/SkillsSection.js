@@ -1,60 +1,94 @@
+'use client';
+
 import React from 'react';
-import { FaCode, FaServer, FaDatabase, FaPalette, FaPython } from 'react-icons/fa';
-import { SiNextdotjs, SiTensorflow, SiKeras, SiCplusplus, SiOpencv } from 'react-icons/si';
+import { useInView } from 'react-intersection-observer';
 
-const SkillsSection = ({ isLoaded }) => {
-    const skills = [
-        { name: 'Python', level: 92, icon: <FaPython className="w-5 h-5 text-white" />, color: 'from-yellow-400 to-amber-500' },
-        { name: 'TensorFlow', level: 87, icon: <SiTensorflow className="w-5 h-5 text-white" />, color: 'from-orange-500 to-yellow-400' },
-        { name: 'Keras', level: 83, icon: <SiKeras className="w-5 h-5 text-white" />, color: 'from-red-500 to-rose-400' },
-        { name: 'C++', level: 90, icon: <SiCplusplus className="w-5 h-5 text-white" />, color: 'from-blue-600 to-indigo-400' },
-        { name: 'OpenCV', level: 84, icon: <SiOpencv className="w-5 h-5 text-white" />, color: 'from-indigo-500 to-purple-400' },
-        { name: 'React.js', level: 90, icon: <FaCode className="w-5 h-5 text-white" />, color: 'from-blue-500 to-cyan-400' },
-        { name: 'Next.js', level: 90, icon: <SiNextdotjs className="w-5 h-5 text-white" />, color: 'from-gray-700 to-zinc-500' },
-        { name: 'Node.js', level: 88, icon: <FaServer className="w-5 h-5 text-white" />, color: 'from-green-500 to-lime-400' },
-        { name: 'MongoDB', level: 85, icon: <FaDatabase className="w-5 h-5 text-white" />, color: 'from-green-600 to-emerald-400' },
-        { name: 'UI/UX Design', level: 80, icon: <FaPalette className="w-5 h-5 text-white" />, color: 'from-pink-500 to-fuchsia-400' }
-    ];
+const skillGroups = [
+  {
+    label: 'Modeling',
+    description: 'Building and training models',
+    icon: '🧠',
+    skills: ['Python', 'TensorFlow', 'Keras', 'Scikit-learn', 'OpenCV', 'Pandas', 'NumPy'],
+    accent: 'signal',
+  },
+  {
+    label: 'Shipping',
+    description: 'Delivering products to users',
+    icon: '🚀',
+    skills: ['React', 'Next.js', 'Node.js', 'Express.js', 'Flask', 'MongoDB', 'MySQL'],
+    accent: 'blue',
+  },
+  {
+    label: 'Systems',
+    description: 'Infrastructure and tooling',
+    icon: '⚡',
+    skills: ['C++', 'C', 'SQL', 'Git', 'Docker', 'Linux', 'REST APIs'],
+    accent: 'purple',
+  },
+];
 
-    return (
-        <section id="skills" className="relative z-10 py-20 px-6 mt-16">
-            <div className="max-w-6xl mx-auto">
-                <h2 className="text-5xl font-bold text-center mb-16 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Skills & Expertise
-                </h2>
+const SkillGroup = ({ group, index }) => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
 
-                <div className="grid md:grid-cols-2 gap-8">
-                    {skills.map((skill, index) => (
-                        <div
-                            key={skill.name}
-                            className="p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
-                            style={{
-                                animationDelay: `${index * 0.1}s`,
-                                animation: isLoaded ? 'fadeInUp 0.6s ease-out forwards' : 'none'
-                            }}
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-3">
-                                    <div className={`p-2 rounded-lg bg-gradient-to-r ${skill.color}`}>
-                                        {skill.icon}
-                                    </div>
-                                    <span className="text-xl font-semibold">{skill.name}</span>
-                                </div>
-                                <span className="text-gray-400">{skill.level}%</span>
-                            </div>
+  return (
+    <div
+      ref={ref}
+      className={`card-3d ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}
+      style={{ animationDelay: `${index * 0.12}s` }}
+    >
+      <div className="card-3d-inner gradient-border p-6 h-full">
+        <div className="flex items-center gap-3 mb-5">
+          <span className="text-2xl">{group.icon}</span>
+          <div>
+            <h3 className="font-mono text-xs text-signal uppercase tracking-widest mb-0.5">
+              {group.label}
+            </h3>
+            <p className="text-ink-dim text-sm">{group.description}</p>
+          </div>
+        </div>
 
-                            <div className="w-full bg-gray-700 rounded-full h-2">
-                                <div
-                                    className={`h-2 rounded-full bg-gradient-to-r ${skill.color} transition-all duration-1000 ease-out`}
-                                    style={{ width: isLoaded ? `${skill.level}%` : '0%' }}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+        <div className="flex flex-wrap gap-2 stagger-children">
+          {group.skills.map((skill) => (
+            <span
+              key={skill}
+              className="font-mono text-xs px-3 py-1.5 rounded-lg bg-bg text-ink border border-surface-border hover:border-signal/40 hover:text-signal hover:bg-signal/5 hover:shadow-[0_0_15px_var(--signal-glow)] transition-all duration-300 cursor-default"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SkillsSection = () => {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+
+  return (
+    <section id="skills" className="relative py-28 px-6 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="glow-orb glow-orb-2" />
+      </div>
+
+      <div className="max-w-3xl mx-auto relative z-10" ref={ref}>
+        <div className={`mb-14 ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}>
+          <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-3">
+            Tech Stack
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tight">
+            Skills
+          </h2>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {skillGroups.map((group, index) => (
+            <SkillGroup key={group.label} group={group} index={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default SkillsSection;

@@ -1,41 +1,45 @@
 import React from 'react';
-import { Github, Linkedin, Mail } from 'lucide-react';
 
 const Footer = () => {
-    return (
-        <footer className="relative z-10 py-8 px-6 border-t border-white/10">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
-                <div className="text-gray-400 mb-4 md:mb-0">
-                    © 2025 Muhammad Abdullah.
-                </div>
+  return (
+    <footer className="relative py-10 px-6 border-t border-surface-border">
+      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
+        <div className="flex items-center gap-3">
+          <span className="font-display font-bold text-ink text-lg">
+            MA<span className="text-signal">.</span>
+          </span>
+          <span className="text-ink-dim text-sm">
+            © 2026 Muhammad Abdullah
+          </span>
+        </div>
 
-                <div className="flex space-x-6">
-                    <a
-                        href="https://linkedin.com/in/muhammadabdullah-cs"
-                        className="text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <Linkedin className="w-5 h-5" />
-                    </a>
-                    <a
-                        href="https://github.com/Abdullahar990"
-                        className="text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <Github className="w-5 h-5" />
-                    </a>
-                    <a
-                        href="mailto:abdullahar990@gmail.com"
-                        className="text-gray-400 hover:text-purple-400 transition-colors duration-300"
-                    >
-                        <Mail className="w-5 h-5" />
-                    </a>
-                </div>
-            </div>
-        </footer>
-    );
+        <div className="flex items-center gap-8">
+          <a
+            href="https://github.com/Abdullahar990"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink-dim hover:text-signal transition-colors duration-200 text-sm font-medium"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://linkedin.com/in/muhammadabdullah-cs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink-dim hover:text-signal transition-colors duration-200 text-sm font-medium"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="mailto:abdullahar990@gmail.com"
+            className="text-ink-dim hover:text-signal transition-colors duration-200 text-sm font-medium"
+          >
+            Email
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
