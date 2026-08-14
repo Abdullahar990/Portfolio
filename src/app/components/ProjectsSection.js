@@ -3,34 +3,35 @@
 import React from 'react';
 import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
+import { ExternalLink, Github } from 'lucide-react';
 
 const secondaryProjects = [
   {
     title: 'Check INN, Chill Out',
+    subtitle: 'Hotel Management System',
     description:
-      'MERN stack hotel management system with JWT authentication, role-based access control, reservation management, and admin dashboard.',
-    tech: ['Next.js', 'MongoDB', 'Node.js', 'JWT'],
+      'Full-stack hotel management platform featuring a complete booking engine, role-based access control (Admin/Guest), and JWT-secured API endpoints.',
+    tech: ['Next.js', 'MongoDB', 'Node.js', 'Express.js', 'JWT', 'Bootstrap'],
     github: 'https://github.com/Abdullahar990/check-inn-chill-out',
     year: '2024',
-    icon: '🏨',
   },
   {
     title: 'Disease Prediction System',
+    subtitle: 'Machine Learning Diagnostics',
     description:
-      'Trained 4 ML classifiers (RF, SVM, KNN, LR) on 5,000+ medical records. Applied SMOTE for class balancing. Best model: 88% accuracy.',
-    tech: ['Python', 'Scikit-learn', 'Pandas', 'Flask'],
+      'Trained and evaluated 4 classifiers (Random Forest, SVM, KNN, Logistic Regression) on 5,000+ patient records using SMOTE for class balancing; achieved 88% diagnostic accuracy.',
+    tech: ['Python', 'Scikit-learn', 'Pandas', 'NumPy', 'Flask'],
     github: 'https://github.com/Abdullahar990/Disease-Prediction-App',
     year: '2023',
-    icon: '🧬',
   },
   {
     title: 'Spare Parts Management',
+    subtitle: 'Inventory Tracking & Logistics',
     description:
-      'PHP/MySQL inventory system for warehouse operations. Optimized SQL queries for fast lookups across 1,000+ part records.',
-    tech: ['PHP', 'MySQL', 'JavaScript'],
+      'Web-based warehouse inventory system with real-time stock tracking and automated reorder alerts. Optimized indexed MySQL queries, reducing report generation latency by 40%.',
+    tech: ['PHP', 'MySQL', 'JavaScript', 'HTML5', 'Bootstrap'],
     github: 'https://github.com/Abdullahar990/Spare-Parts-Management-System',
     year: '2023',
-    icon: '⚙️',
   },
 ];
 
@@ -40,92 +41,88 @@ const GuardianSenseCard = () => {
   return (
     <div
       ref={ref}
-      className={`card-3d ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}
+      className={`card-surface overflow-hidden ${
+        inView ? 'animate-fade-slide-up' : 'opacity-0'
+      }`}
     >
-      <div className="card-3d-inner animated-border-square">
-        <div className="bg-surface rounded-[15px] overflow-hidden">
-          <div className="flex flex-col lg:flex-row">
-            {/* Image Side */}
-            <div className="relative w-full lg:w-1/2 h-72 sm:h-80 lg:h-auto lg:min-h-[420px] overflow-hidden">
-              <Image
-                src="/GS.jpg"
-                alt="GuardianSense — AI emergency response system"
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-                quality={80}
-                priority
-              />
-              {/* Scanline effect over image */}
-              <div className="scanline absolute inset-0" />
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-surface" />
-              {/* Featured badge */}
-              <div className="absolute top-4 left-4 z-10">
-                <span className="font-mono text-xs px-3 py-1.5 rounded-full bg-signal/10 text-signal border border-signal/30 backdrop-blur-sm inline-flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-signal animate-[statusDotPulse_2s_ease-in-out_infinite]" />
-                  Featured
+      <div className="flex flex-col lg:flex-row">
+        {/* Image */}
+        <div className="relative w-full lg:w-1/2 h-64 sm:h-80 lg:h-auto lg:min-h-[380px] bg-bg">
+          <Image
+            src="/GS.jpg"
+            alt="GuardianSense Interface"
+            fill
+            className="object-cover"
+            quality={85}
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-surface" />
+          <div className="absolute top-4 left-4">
+            <span className="font-mono text-xs px-2.5 py-1 rounded bg-bg/90 text-signal border border-signal/40 backdrop-blur-sm">
+              Featured Case Study
+            </span>
+          </div>
+        </div>
+
+        {/* Details */}
+        <div className="p-6 sm:p-8 lg:w-1/2 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="font-mono text-xs text-signal">Safety-Critical AI</span>
+              <span className="font-mono text-xs text-ink-dim">2024</span>
+            </div>
+
+            <h3 className="font-display text-2xl sm:text-3xl font-bold text-ink tracking-tight mb-2">
+              Guardian Sense
+            </h3>
+            <p className="text-sm font-medium text-ink-dim mb-4">
+              AI-Driven Emergency Accident Response System
+            </p>
+
+            <p className="text-sm text-ink-dim leading-relaxed mb-6">
+              Architected a hybrid BiLSTM Autoencoder + Isolation Forest pipeline processing smartphone accelerometer and gyroscope streams. Achieved on-device emergency inference deployed via ONNX in Flutter, coupled with three dedicated Next.js portals (Hospital, Police, Admin) and a RESTful Node.js backend supporting 50+ concurrent users.
+            </p>
+
+            {/* Metrics */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="p-3 rounded-lg bg-bg border border-surface-border text-center">
+                <span className="font-mono text-lg font-bold text-signal block">92%</span>
+                <span className="font-mono text-xs text-ink-dim">Accuracy</span>
+              </div>
+              <div className="p-3 rounded-lg bg-bg border border-surface-border text-center">
+                <span className="font-mono text-lg font-bold text-signal block">50+</span>
+                <span className="font-mono text-xs text-ink-dim">Active Users</span>
+              </div>
+              <div className="p-3 rounded-lg bg-bg border border-surface-border text-center">
+                <span className="font-mono text-lg font-bold text-signal block">&lt;800ms</span>
+                <span className="font-mono text-xs text-ink-dim">Latency</span>
+              </div>
+            </div>
+
+            {/* Tech tags */}
+            <div className="flex flex-wrap gap-1.5 mb-6">
+              {['Next.js', 'Node.js', 'Flutter', 'MongoDB', 'TensorFlow', 'ONNX'].map((t) => (
+                <span
+                  key={t}
+                  className="font-mono text-xs px-2.5 py-1 rounded bg-bg text-ink-dim border border-surface-border"
+                >
+                  {t}
                 </span>
-              </div>
+              ))}
             </div>
+          </div>
 
-            {/* Content Side */}
-            <div className="p-8 sm:p-10 lg:w-1/2 flex flex-col justify-center">
-              <span className="font-mono text-xs text-ink-dim mb-3 block">2024</span>
-
-              <h3 className="font-display text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-2">
-                Guardian Sense
-              </h3>
-              <p className="text-signal text-sm font-medium mb-5">
-                AI Emergency Response System
-              </p>
-
-              <p className="text-ink-dim leading-relaxed mb-8 text-sm sm:text-base">
-                Hybrid BiLSTM Autoencoder + Isolation Forest model for
-                fall/accident detection. Deployed via ONNX for on-device inference
-                in Flutter. Three web portals (Hospital, Police, Admin) built in
-                Next.js with a RESTful Node.js backend.
-              </p>
-
-              {/* Metrics — the star of this card */}
-              <div className="grid grid-cols-3 gap-4 mb-8">
-                {[
-                  { value: '92%', label: 'Accuracy' },
-                  { value: '50+', label: 'Users' },
-                  { value: '800ms', label: 'Latency' },
-                ].map((m) => (
-                  <div key={m.label} className="text-center p-3 rounded-xl bg-bg border border-surface-border">
-                    <div className="font-mono text-xl sm:text-2xl font-bold text-signal text-glow mb-1">
-                      {m.value}
-                    </div>
-                    <div className="font-mono text-xs text-ink-dim uppercase tracking-wider">
-                      {m.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Tech tags */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {['Next.js', 'Node.js', 'Flutter', 'MongoDB', 'TensorFlow', 'ONNX'].map((t) => (
-                  <span
-                    key={t}
-                    className="font-mono text-xs px-2.5 py-1 rounded-lg bg-bg text-ink-dim border border-surface-border hover:border-signal/30 hover:text-signal transition-all duration-200"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              <a
-                href="https://github.com/Abdullahar990/Disease-Prediction-App"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 text-signal hover:text-ink transition-colors duration-200 text-sm font-medium w-fit"
-              >
-                View on GitHub
-                <span className="group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true">→</span>
-              </a>
-            </div>
+          <div>
+            <a
+              href="https://github.com/Abdullahar990"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-signal hover:text-ink transition-colors duration-200"
+            >
+              <Github className="w-4 h-4" />
+              <span>View Source on GitHub</span>
+              <span aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </div>
@@ -139,44 +136,47 @@ const SecondaryCard = ({ project, index }) => {
   return (
     <div
       ref={ref}
-      className={`card-3d ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}
-      style={{ animationDelay: `${(index + 1) * 0.12}s` }}
+      className={`card-surface p-6 flex flex-col justify-between ${
+        inView ? 'animate-fade-slide-up' : 'opacity-0'
+      }`}
+      style={{ animationDelay: `${(index + 1) * 0.1}s` }}
     >
-      <div className="card-3d-inner gradient-border p-6 h-full">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-2xl">{project.icon}</span>
+      <div>
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className="font-mono text-xs text-signal">{project.subtitle}</span>
           <span className="font-mono text-xs text-ink-dim">{project.year}</span>
         </div>
 
-        <h3 className="font-display text-lg font-semibold text-ink mb-3">
+        <h3 className="font-display text-lg font-semibold text-ink mb-2">
           {project.title}
         </h3>
 
-        <p className="text-ink-dim text-sm leading-relaxed mb-5">
+        <p className="text-sm text-ink-dim leading-relaxed mb-5">
           {project.description}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-1.5 mb-6">
           {project.tech.map((t) => (
             <span
               key={t}
-              className="font-mono text-xs px-2 py-1 rounded-lg bg-bg text-ink-dim border border-surface-border hover:border-signal/30 hover:text-signal transition-all duration-200"
+              className="font-mono text-xs px-2 py-0.5 rounded bg-bg text-ink-dim border border-surface-border"
             >
               {t}
             </span>
           ))}
         </div>
-
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 text-ink-dim hover:text-signal transition-colors duration-200 text-sm mt-auto"
-        >
-          GitHub
-          <span className="group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true">→</span>
-        </a>
       </div>
+
+      <a
+        href={project.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-sm font-medium text-ink-dim hover:text-signal transition-colors duration-200 mt-auto"
+      >
+        <Github className="w-4 h-4" />
+        <span>Repository</span>
+        <ExternalLink className="w-3.5 h-3.5" />
+      </a>
     </div>
   );
 };
@@ -185,45 +185,30 @@ const ProjectsSection = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (
-    <section id="projects" className="relative py-28 px-6 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="grid-bg absolute inset-0" />
-      </div>
-
-      <div className="max-w-3xl mx-auto relative z-10" ref={ref}>
-        <div className={`mb-14 ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}>
-          <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-3">
-            Portfolio
+    <section id="projects" className="py-24 px-6 border-t border-surface-border">
+      <div className="max-w-4xl mx-auto" ref={ref}>
+        <div className={`mb-12 ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}>
+          <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
+            Selected Works
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl font-bold text-ink tracking-tight">
-            Projects
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink tracking-tight mb-3">
+            Featured Systems
           </h2>
+          <p className="text-ink-dim text-sm sm:text-base max-w-xl">
+            Real-world systems spanning on-device sensor intelligence, full-stack enterprise portals, and predictive data pipelines.
+          </p>
         </div>
-      </div>
 
-      {/* GuardianSense — wider feature card */}
-      <div className="max-w-5xl mx-auto mb-10 px-6 relative z-10">
-        <GuardianSenseCard />
-      </div>
+        {/* GuardianSense Feature */}
+        <div className="mb-8">
+          <GuardianSenseCard />
+        </div>
 
-      {/* Secondary projects */}
-      <div className="max-w-3xl mx-auto relative z-10">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Secondary Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {secondaryProjects.map((project, index) => (
             <SecondaryCard key={project.title} project={project} index={index} />
           ))}
-        </div>
-
-        <div className="mt-10 text-center">
-          <a
-            href="https://github.com/Abdullahar990"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 text-ink-dim hover:text-signal transition-colors duration-200 text-sm font-medium"
-          >
-            View all projects on GitHub
-            <span className="group-hover:translate-x-1 transition-transform duration-200" aria-hidden="true">→</span>
-          </a>
         </div>
       </div>
     </section>

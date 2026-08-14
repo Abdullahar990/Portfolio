@@ -2,7 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 
-const navItems = ['Work', 'Projects', 'Skills', 'Contact'];
+const navItems = [
+  { name: 'About', href: '#about' },
+  { name: 'Work', href: '#work' },
+  { name: 'Projects', href: '#projects' },
+  { name: 'Certifications', href: '#certifications' },
+  { name: 'Skills', href: '#skills' },
+  { name: 'Contact', href: '#contact' },
+];
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,12 +23,10 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on navigation
   const handleNavClick = () => {
     setIsOpen(false);
   };
 
-  // Close menu on escape key
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') setIsOpen(false);
@@ -30,7 +35,6 @@ const Navigation = () => {
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -44,36 +48,36 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 transition-all duration-200 ${
         scrolled
-          ? 'bg-bg/90 backdrop-blur-md border-b border-surface-border'
+          ? 'bg-bg/95 backdrop-blur-md border-b border-surface-border'
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-5xl mx-auto px-6 py-4">
+      <div className="max-w-4xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo / Name */}
+          {/* Brand */}
           <a
             href="#home"
-            className="font-display font-bold text-ink hover:text-signal transition-colors duration-200 text-lg"
+            className="font-display font-bold text-ink hover:text-signal transition-colors duration-200 text-lg tracking-tight"
           >
             MA<span className="text-signal">.</span>
           </a>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center gap-7">
             {navItems.map((item) => (
               <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-sm text-ink-dim hover:text-signal transition-colors duration-200 font-medium"
+                key={item.name}
+                href={item.href}
+                className="text-xs font-mono text-ink-dim hover:text-signal transition-colors duration-200"
               >
-                {item}
+                {item.name}
               </a>
             ))}
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-ink-dim hover:text-ink transition-colors duration-200"
@@ -101,21 +105,19 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-surface border-t border-surface-border">
-          <div className="px-6 py-4 space-y-1">
-            {navItems.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                onClick={handleNavClick}
-                className="block py-3 text-ink-dim hover:text-signal transition-colors duration-200 font-medium text-sm border-b border-surface-border/50 last:border-b-0"
-              >
-                {item}
-              </a>
-            ))}
-          </div>
+        <div className="md:hidden bg-surface border-t border-surface-border px-6 py-4 space-y-2">
+          {navItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              onClick={handleNavClick}
+              className="block py-2.5 text-sm font-mono text-ink-dim hover:text-signal border-b border-surface-border/40 last:border-none"
+            >
+              {item.name}
+            </a>
+          ))}
         </div>
       )}
     </nav>
