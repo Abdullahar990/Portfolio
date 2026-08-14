@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Briefcase } from 'lucide-react';
 
 const experiences = [
   {
@@ -66,14 +67,9 @@ const WorkEntry = ({ entry, index }) => {
       }`}
       style={{ animationDelay: `${index * 0.1}s` }}
     >
-      {/* Timeline line */}
-      {index < experiences.length - 1 && (
-        <div className="absolute left-5 sm:left-7 top-10 bottom-0 w-px bg-surface-border" />
-      )}
-
       {/* Number marker */}
       <div
-        className={`absolute left-0 top-0 w-10 h-10 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center font-mono text-xs sm:text-sm font-medium ${
+        className={`absolute left-0 top-0 w-10 h-10 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center font-mono text-xs sm:text-sm font-medium z-10 ${
           entry.current
             ? 'bg-signal/10 text-signal border border-signal/40'
             : 'bg-surface text-ink-dim border border-surface-border'
@@ -126,21 +122,51 @@ const WorkEntry = ({ entry, index }) => {
 };
 
 const WorkSection = () => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const { ref: sectionRef, inView } = useInView({ triggerOnce: true, threshold: 0.05 });
+  const timelineRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!timelineRef.current) return;
+      const rect = timelineRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const totalHeight = rect.height;
+      const visible = windowHeight - rect.top;
+      const progress = Math.min(Math.max(visible / (totalHeight + windowHeight * 0.5), 0), 1);
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <section id="work" className="py-24 px-6 border-t border-surface-border">
-      <div className="max-w-3xl mx-auto" ref={ref}>
+      <div className="max-w-3xl mx-auto" ref={sectionRef}>
         <div className={`mb-12 ${inView ? 'animate-fade-slide-up' : 'opacity-0'}`}>
-          <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
-            Career Timeline
-          </span>
+          <div className="flex items-center gap-2 mb-2">
+            <Briefcase className="w-4 h-4 text-signal" />
+            <span className="font-mono text-xs text-signal tracking-widest uppercase">
+              Career Trajectory
+            </span>
+          </div>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink tracking-tight">
             Work Experience
           </h2>
         </div>
 
-        <div>
+        <div ref={timelineRef} className="relative">
+          {/* Base Background Track Line */}
+          <div className="absolute left-5 sm:left-7 top-6 bottom-6 w-px bg-surface-border" />
+
+          {/* Active Scroll Progress Fill Line */}
+          <div
+            className="absolute left-5 sm:left-7 top-6 w-px bg-signal transition-all duration-150 ease-out"
+            style={{ height: `calc(${scrollProgress * 100}% - 24px)` }}
+          />
+
           {experiences.map((entry, index) => (
             <WorkEntry key={entry.number} entry={entry} index={index} />
           ))}

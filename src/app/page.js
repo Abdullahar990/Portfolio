@@ -3,9 +3,9 @@
 import React from 'react';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
-import ArchitectureSequence from './components/ArchitectureSequence';
 import AboutSection from './components/AboutSection';
 import WorkSection from './components/WorkSection';
+import ProjectExplorer from './components/ProjectExplorer';
 import ProjectsSection from './components/ProjectsSection';
 import CertificationsSection from './components/CertificationsSection';
 import SkillsSection from './components/SkillsSection';
@@ -18,9 +18,9 @@ const Portfolio = () => {
       <Navigation />
       <main>
         <HeroSection />
-        <ArchitectureSequence />
         <AboutSection />
         <WorkSection />
+        <ProjectExplorer />
         <ProjectsSection />
         <CertificationsSection />
         <SkillsSection />
