@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 
 const navItems = [
-  { name: 'Architecture', href: '#architecture' },
   { name: 'About', href: '#about' },
   { name: 'Work', href: '#work' },
   { name: 'Projects', href: '#projects' },
@@ -65,8 +64,8 @@ const Navigation = () => {
             MA<span className="text-signal">.</span>
           </a>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-6">
+          {/* Desktop Links in Exact Reading Order */}
+          <div className="hidden md:flex items-center gap-7">
             {navItems.map((item) => (
               <a
                 key={item.name}
@@ -78,7 +77,7 @@ const Navigation = () => {
             ))}
           </div>
 
-          {/* Mobile Button */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-ink-dim hover:text-ink transition-colors duration-200"

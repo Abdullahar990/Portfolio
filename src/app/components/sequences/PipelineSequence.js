@@ -4,15 +4,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronRight, ChevronLeft, Activity, ShieldCheck, Database, Layers, ArrowRight } from 'lucide-react';
+import { ChevronDown, Activity, Layers, Cpu, Database, CheckCircle2 } from 'lucide-react';
 
 const PipelineSequence = ({
   projectSlug = 'guardiansense',
   stages = [],
-  mode = 'click', // 'scroll' or 'click'
-  title = 'System Architecture Pipeline',
-  subtitle = 'Deconstructed Execution Flow',
-  onStageChange = null,
+  title = 'System Architecture Sequence',
+  subtitle = 'Scroll to scrub through live operational pipeline stages',
 }) => {
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
@@ -20,22 +18,13 @@ const PipelineSequence = ({
   const [activeStage, setActiveStage] = useState(0);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
 
-  // References to 3D objects for tweening across stages
-  const sceneStateRef = useRef({
+  const sceneRef = useRef({
     scene: null,
     camera: null,
     renderer: null,
     rootGroup: null,
-    layers: [],
-    coreMesh: null,
-    lights: {},
     reqId: null,
   });
-
-  const handleStageSelect = (idx) => {
-    setActiveStage(idx);
-    if (onStageChange) onStageChange(idx);
-  };
 
   useEffect(() => {
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -44,15 +33,13 @@ const PipelineSequence = ({
       return;
     }
 
-    if (mode === 'scroll') {
-      gsap.registerPlugin(ScrollTrigger);
-    }
+    gsap.registerPlugin(ScrollTrigger);
 
     const canvas = canvasRef.current;
-    if (!canvas || !containerRef.current) return;
+    if (!canvas || !containerRef.current || !sectionRef.current) return;
 
-    const width = containerRef.current.clientWidth || 800;
-    const height = containerRef.current.clientHeight || 500;
+    const width = containerRef.current.clientWidth || window.innerWidth;
+    const height = containerRef.current.clientHeight || window.innerHeight;
 
     // ── Three.js Scene Setup ──
     const scene = new THREE.Scene();
@@ -71,7 +58,7 @@ const PipelineSequence = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
     // ── Lighting ──
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
     const signalLight = new THREE.PointLight(0x3dd6c4, 3, 20);
@@ -127,16 +114,36 @@ const PipelineSequence = ({
 
     const rootGroup = new THREE.Group();
     scene.add(rootGroup);
-    const layers = [];
-    let coreMesh = null;
 
-    // ── Build 3D Primitives based on projectSlug ──
+    // Setup master GSAP ScrollTrigger timeline
+    const masterTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '+=2600',
+        scrub: 1,
+        pin: true,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const stageIndex = Math.min(
+            Math.floor(progress * stages.length),
+            stages.length - 1
+          );
+          setActiveStage(stageIndex);
+        },
+      },
+    });
+
+    // ══════════════════════════════════════════════════════════
+    // Differentiated 3D Behaviors per Project
+    // ══════════════════════════════════════════════════════════
+
     if (projectSlug === 'guardiansense') {
-      // 5-Stage Sensor to Decision Deconstruction
+      // ── GuardianSense: Phone Chassis Explodes into 5 Subsystem Layers ──
       const bottom = createBoxWithEdges(3.2, 0.2, 1.8, chassisMat);
       bottom.position.y = -0.3;
       rootGroup.add(bottom);
-      layers.push(bottom);
 
       const sensor = new THREE.Group();
       sensor.add(createBoxWithEdges(2.8, 0.1, 1.5, sensorMat));
@@ -149,7 +156,6 @@ const PipelineSequence = ({
       sensor.add(new THREE.Line(waveGeom, new THREE.LineBasicMaterial({ color: 0x3dd6c4 })));
       sensor.position.y = -0.1;
       rootGroup.add(sensor);
-      layers.push(sensor);
 
       const neural = new THREE.Group();
       neural.add(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.2, 1.3), glassMat));
@@ -164,159 +170,180 @@ const PipelineSequence = ({
       }
       neural.position.y = 0.1;
       rootGroup.add(neural);
-      layers.push(neural);
 
       const anomaly = createBoxWithEdges(2.6, 0.12, 1.4, sensorMat);
       anomaly.position.y = 0.3;
       rootGroup.add(anomaly);
-      layers.push(anomaly);
 
       const top = createBoxWithEdges(3.2, 0.2, 1.8, chassisMat);
       top.position.y = 0.5;
       rootGroup.add(top);
-      layers.push(top);
 
-      coreMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.35, 0), new THREE.MeshBasicMaterial({ color: 0x3dd6c4 }));
-      coreMesh.scale.set(0.01, 0.01, 0.01);
-      rootGroup.add(coreMesh);
+      const decisionCore = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.35, 0),
+        new THREE.MeshBasicMaterial({ color: 0x3dd6c4 })
+      );
+      decisionCore.scale.set(0.01, 0.01, 0.01);
+      rootGroup.add(decisionCore);
+
+      // Scrub timeline
+      masterTl
+        .to(rootGroup.rotation, { y: 0.6, x: 0.25, duration: 2 }, 0)
+        .to(top.position, { y: 1.8, duration: 2 }, 0)
+        .to(bottom.position, { y: -1.8, duration: 2 }, 0)
+        .to(sensor.position, { y: -0.9, duration: 2 }, 0)
+        .to(anomaly.position, { y: 1.0, duration: 2 }, 0)
+        .to(neural.position, { y: 0.1, duration: 2 }, 0);
+
+      masterTl
+        .to(rootGroup.rotation, { y: -0.4, x: 0.35, duration: 2 }, 2)
+        .to(sensor.position, { y: -1.4, duration: 2 }, 2)
+        .to(neural.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 2);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0.8, x: 0.15, duration: 2 }, 4)
+        .to(anomaly.position, { y: 0.7, duration: 2 }, 4)
+        .to(anomaly.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 4);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0, x: 0.1, duration: 2 }, 6)
+        .to(top.position, { y: 0.4, duration: 2 }, 6)
+        .to(bottom.position, { y: -0.4, duration: 2 }, 6)
+        .to(decisionCore.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 2 }, 6)
+        .to(signalLight, { intensity: 6, duration: 2 }, 6);
+
     } else if (projectSlug === 'check-inn') {
-      // 4-Layer Stack: Client Request -> Auth -> Booking Engine -> REST API
-      const layerNames = ['Client Request', 'JWT Auth Guard', 'Booking Engine & DB', 'Express Confirmation'];
-      layerNames.forEach((_, i) => {
-        const mat = i === 1 ? glassMat : i === 2 ? sensorMat : chassisMat;
-        const layer = createBoxWithEdges(3.0 - i * 0.2, 0.18, 1.6 - i * 0.1, mat);
-        layer.position.y = (i - 1.5) * 0.25;
-        rootGroup.add(layer);
-        layers.push(layer);
-      });
-      coreMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), glassMat);
-      coreMesh.position.set(0, 0, 0);
-      coreMesh.scale.set(0.01, 0.01, 0.01);
-      rootGroup.add(coreMesh);
-    } else if (projectSlug === 'disease-prediction') {
-      // 4 ML Classifiers Model Nodes (RF, SVM, KNN, LR)
-      const basePlatform = createBoxWithEdges(3.4, 0.15, 2.0, chassisMat);
-      basePlatform.position.y = -0.5;
-      rootGroup.add(basePlatform);
-      layers.push(basePlatform);
-
-      const modelsGroup = new THREE.Group();
-      const offsets = [
-        [-1.0, 0, -0.4],
-        [1.0, 0, -0.4],
-        [-1.0, 0, 0.4],
-        [1.0, 0, 0.4],
+      // ── Check INN: 4 Flat Front-End UI Panels Slide in Space ──
+      const panels = [];
+      const panelConfigs = [
+        { w: 3.2, h: 0.6, d: 0.05, label: 'Search Header UI', yInit: 2.5 },
+        { w: 3.0, h: 1.4, d: 0.05, label: 'Room Gallery Card', yInit: 1.5 },
+        { w: 2.8, h: 1.2, d: 0.05, label: 'Booking Form Panel', yInit: -0.5 },
+        { w: 3.2, h: 1.0, d: 0.05, label: 'Owner Property Table', yInit: -2.0 },
       ];
-      offsets.forEach((pos, i) => {
-        const m = createBoxWithEdges(0.7, 0.4, 0.5, i === 0 ? glassMat : sensorMat);
-        m.position.set(pos[0], pos[1], pos[2]);
-        modelsGroup.add(m);
+
+      panelConfigs.forEach((cfg, idx) => {
+        const p = createBoxWithEdges(cfg.w, cfg.h, cfg.d, idx === 1 ? glassMat : chassisMat);
+        p.position.set((idx % 2 === 0 ? -0.3 : 0.3) * (idx + 1), (idx - 1.5) * 0.7, -idx * 0.4);
+        rootGroup.add(p);
+        panels.push(p);
       });
-      rootGroup.add(modelsGroup);
-      layers.push(modelsGroup);
 
-      coreMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 16), new THREE.MeshBasicMaterial({ color: 0x3dd6c4 }));
-      coreMesh.position.set(0, 0.4, 0);
-      coreMesh.scale.set(0.01, 0.01, 0.01);
-      rootGroup.add(coreMesh);
-    } else {
-      // spare-parts: 4 Sequential Logistics Flow Blocks
-      const baseTrack = createBoxWithEdges(3.6, 0.1, 1.2, chassisMat);
-      baseTrack.position.y = -0.4;
-      rootGroup.add(baseTrack);
-      layers.push(baseTrack);
+      masterTl
+        .to(rootGroup.rotation, { y: 0.45, x: 0.15, duration: 2 }, 0)
+        .to(panels[0].position, { x: 0, y: 1.2, z: 0, duration: 2 }, 0)
+        .to(panels[1].position, { x: 0, y: 0.4, z: -0.3, duration: 2 }, 0)
+        .to(panels[2].position, { x: 0, y: -0.4, z: -0.6, duration: 2 }, 0)
+        .to(panels[3].position, { x: 0, y: -1.2, z: -0.9, duration: 2 }, 0);
 
-      const blocksGroup = new THREE.Group();
-      for (let i = 0; i < 4; i++) {
-        const b = createBoxWithEdges(0.65, 0.35, 0.7, i === 3 ? glassMat : sensorMat);
-        b.position.x = -1.2 + i * 0.8;
-        b.position.y = 0;
-        blocksGroup.add(b);
+      masterTl
+        .to(rootGroup.rotation, { y: -0.35, x: 0.25, duration: 2 }, 2)
+        .to(panels[1].scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 2)
+        .to(panels[0].position, { y: 1.5, duration: 2 }, 2);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0.2, x: 0.1, duration: 2 }, 4)
+        .to(panels[2].scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 4)
+        .to(panels[1].scale, { x: 1.0, y: 1.0, z: 1.0, duration: 2 }, 4);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0, x: 0, duration: 2 }, 6)
+        .to(panels[3].scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 6);
+
+    } else if (projectSlug === 'disease-prediction') {
+      // ── Disease Prediction: KNN Neighbor Clustering & Voting ──
+      const centerQuery = new THREE.Mesh(
+        new THREE.SphereGeometry(0.25, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xf5a623 }) // query vector
+      );
+      centerQuery.position.set(0, 0, 0);
+      rootGroup.add(centerQuery);
+
+      const neighborNodes = [];
+      const ringGroup = new THREE.Group();
+      rootGroup.add(ringGroup);
+
+      for (let i = 0; i < 24; i++) {
+        const angle = (i / 24) * Math.PI * 2;
+        const radius = 1.2 + (i % 3) * 0.6;
+        const isKNearest = i < 10;
+        const node = new THREE.Mesh(
+          new THREE.SphereGeometry(isKNearest ? 0.1 : 0.06, 8, 8),
+          new THREE.MeshStandardMaterial({
+            color: isKNearest ? 0x3dd6c4 : 0x252a33,
+            emissive: isKNearest ? 0x3dd6c4 : 0x000000,
+            emissiveIntensity: 0.2,
+          })
+        );
+        node.position.set(Math.cos(angle) * radius, (Math.sin(i * 3) * 0.4), Math.sin(angle) * radius);
+        ringGroup.add(node);
+        neighborNodes.push(node);
       }
-      rootGroup.add(blocksGroup);
-      layers.push(blocksGroup);
 
-      coreMesh = new THREE.Mesh(new THREE.OctahedronGeometry(0.3, 0), new THREE.MeshBasicMaterial({ color: 0x3dd6c4 }));
-      coreMesh.position.set(1.2, 0.4, 0);
-      coreMesh.scale.set(0.01, 0.01, 0.01);
-      rootGroup.add(coreMesh);
+      masterTl
+        .to(rootGroup.rotation, { y: 1.0, x: 0.3, duration: 2 }, 0)
+        .to(centerQuery.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 2 }, 0);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 2.0, x: 0.1, duration: 2 }, 2)
+        .to(ringGroup.scale, { x: 0.85, y: 0.85, z: 0.85, duration: 2 }, 2);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 3.14, x: 0.25, duration: 2 }, 4)
+        .to(centerQuery.scale, { x: 1.4, y: 1.4, z: 1.4, duration: 2 }, 4)
+        .to(signalLight, { intensity: 5, duration: 2 }, 4);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 4.2, x: 0, duration: 2 }, 6)
+        .to(ringGroup.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 2 }, 6)
+        .to(centerQuery.position, { y: 0.2, duration: 2 }, 6);
+
+    } else {
+      // ── Spare Parts: Sequential Relational Transaction Pipeline ──
+      const stagesFlow = [];
+      for (let i = 0; i < 4; i++) {
+        const block = createBoxWithEdges(0.7, 0.5, 0.7, i === 0 ? glassMat : sensorMat);
+        block.position.set(-1.5 + i * 1.0, (i % 2 === 0 ? 0.2 : -0.2), 0);
+        rootGroup.add(block);
+        stagesFlow.push(block);
+      }
+
+      // Connecting conduit
+      const pipeGeom = new THREE.CylinderGeometry(0.04, 0.04, 3.2, 8);
+      pipeGeom.rotateZ(Math.PI / 2);
+      const pipe = new THREE.Mesh(pipeGeom, new THREE.MeshBasicMaterial({ color: 0x3dd6c4, transparent: true, opacity: 0.4 }));
+      pipe.position.set(0, 0, 0);
+      rootGroup.add(pipe);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0.4, x: 0.2, duration: 2 }, 0)
+        .to(stagesFlow[0].scale, { x: 1.25, y: 1.25, z: 1.25, duration: 2 }, 0);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0.8, x: 0.15, duration: 2 }, 2)
+        .to(stagesFlow[0].scale, { x: 1.0, y: 1.0, z: 1.0, duration: 2 }, 2)
+        .to(stagesFlow[1].scale, { x: 1.25, y: 1.25, z: 1.25, duration: 2 }, 2);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 1.2, x: 0.25, duration: 2 }, 4)
+        .to(stagesFlow[1].scale, { x: 1.0, y: 1.0, z: 1.0, duration: 2 }, 4)
+        .to(stagesFlow[2].scale, { x: 1.25, y: 1.25, z: 1.25, duration: 2 }, 4);
+
+      masterTl
+        .to(rootGroup.rotation, { y: 0.1, x: 0.1, duration: 2 }, 6)
+        .to(stagesFlow[2].scale, { x: 1.0, y: 1.0, z: 1.0, duration: 2 }, 6)
+        .to(stagesFlow[3].scale, { x: 1.35, y: 1.35, z: 1.35, duration: 2 }, 6)
+        .to(signalLight, { intensity: 6, duration: 2 }, 6);
     }
 
-    sceneStateRef.current = {
-      scene,
-      camera,
-      renderer,
-      rootGroup,
-      layers,
-      coreMesh,
-      lights: { ambientLight, signalLight, dirLight },
-      reqId: null,
-    };
-
-    // ── Render Loop ──
+    // ── Continuous subtle idle spin ──
     const clock = new THREE.Clock();
     const animate = () => {
       const elapsed = clock.getElapsedTime();
-      if (coreMesh) {
-        coreMesh.rotation.y = elapsed * 1.5;
-        coreMesh.rotation.x = elapsed * 0.7;
-      }
       renderer.render(scene, camera);
-      sceneStateRef.current.reqId = requestAnimationFrame(animate);
+      sceneRef.current.reqId = requestAnimationFrame(animate);
     };
     animate();
-
-    // ── Mode: Scroll vs Click ──
-    if (mode === 'scroll' && sectionRef.current) {
-      const masterTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '+=2600',
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const stageIndex = Math.min(
-              Math.floor(progress * stages.length),
-              stages.length - 1
-            );
-            setActiveStage(stageIndex);
-            if (onStageChange) onStageChange(stageIndex);
-          },
-        },
-      });
-
-      if (layers.length >= 5) {
-        masterTl
-          .to(rootGroup.rotation, { y: 0.6, x: 0.25, duration: 2 }, 0)
-          .to(layers[4].position, { y: 1.8, duration: 2 }, 0) // top
-          .to(layers[0].position, { y: -1.8, duration: 2 }, 0) // bottom
-          .to(layers[1].position, { y: -0.9, duration: 2 }, 0) // sensor
-          .to(layers[3].position, { y: 1.0, duration: 2 }, 0) // anomaly
-          .to(layers[2].position, { y: 0.1, duration: 2 }, 0); // neural
-
-        masterTl
-          .to(rootGroup.rotation, { y: -0.4, x: 0.35, duration: 2 }, 2)
-          .to(layers[1].position, { y: -1.4, duration: 2 }, 2)
-          .to(layers[2].scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 2);
-
-        masterTl
-          .to(rootGroup.rotation, { y: 0.8, x: 0.15, duration: 2 }, 4)
-          .to(layers[3].position, { y: 0.7, duration: 2 }, 4)
-          .to(layers[3].scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2 }, 4);
-
-        masterTl
-          .to(rootGroup.rotation, { y: 0, x: 0.1, duration: 2 }, 6)
-          .to(layers[4].position, { y: 0.4, duration: 2 }, 6)
-          .to(layers[0].position, { y: -0.4, duration: 2 }, 6)
-          .to(layers[1].position, { y: -0.15, duration: 2 }, 6)
-          .to(layers[3].position, { y: 0.15, duration: 2 }, 6)
-          .to(coreMesh.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 2 }, 6)
-          .to(signalLight, { intensity: 6, duration: 2 }, 6);
-      }
-    }
 
     const handleResize = () => {
       if (!containerRef.current || !canvas) return;
@@ -329,209 +356,74 @@ const PipelineSequence = ({
 
     window.addEventListener('resize', handleResize);
 
+    const currentScene = sceneRef.current;
+
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (sceneStateRef.current.reqId) {
-        cancelAnimationFrame(sceneStateRef.current.reqId);
+      if (currentScene.reqId) {
+        cancelAnimationFrame(currentScene.reqId);
       }
-      if (mode === 'scroll') {
-        ScrollTrigger.getAll().forEach((t) => t.kill());
-      }
+      ScrollTrigger.getAll().forEach((t) => t.kill());
       renderer.dispose();
     };
-  }, [projectSlug, mode, stages.length, onStageChange]);
-
-  // ── Handle Stage Transitions in "click" mode ──
-  useEffect(() => {
-    if (mode !== 'click') return;
-    const { rootGroup, layers, coreMesh } = sceneStateRef.current;
-    if (!rootGroup || layers.length === 0) return;
-
-    const total = stages.length || 4;
-    const progress = activeStage / (total - 1 || 1);
-
-    gsap.killTweensOf(rootGroup.rotation);
-    gsap.to(rootGroup.rotation, {
-      y: (progress - 0.5) * 1.2,
-      x: 0.25 + (progress - 0.5) * 0.2,
-      duration: 0.6,
-      ease: 'power2.out',
-    });
-
-    if (projectSlug === 'guardiansense' && layers.length >= 5) {
-      const spread = progress * 1.5;
-      gsap.to(layers[4].position, { y: 0.5 + spread * 0.9, duration: 0.6 });
-      gsap.to(layers[0].position, { y: -0.3 - spread * 0.9, duration: 0.6 });
-      gsap.to(layers[1].position, { y: -0.1 - spread * 0.5, duration: 0.6 });
-      gsap.to(layers[3].position, { y: 0.3 + spread * 0.5, duration: 0.6 });
-      if (coreMesh) {
-        gsap.to(coreMesh.scale, {
-          x: progress > 0.8 ? 1.2 : 0.01,
-          y: progress > 0.8 ? 1.2 : 0.01,
-          z: progress > 0.8 ? 1.2 : 0.01,
-          duration: 0.5,
-        });
-      }
-    } else if (projectSlug === 'check-inn') {
-      layers.forEach((layer, idx) => {
-        const isTarget = idx === activeStage;
-        const targetY = (idx - 1.5) * (0.25 + progress * 0.35);
-        gsap.to(layer.position, { y: targetY, duration: 0.6 });
-        gsap.to(layer.scale, {
-          x: isTarget ? 1.1 : 1.0,
-          y: isTarget ? 1.1 : 1.0,
-          z: isTarget ? 1.1 : 1.0,
-          duration: 0.5,
-        });
-      });
-    } else if (projectSlug === 'disease-prediction') {
-      if (layers[1]) {
-        layers[1].children.forEach((mesh, idx) => {
-          const isWinner = idx === 0 && activeStage === 3;
-          gsap.to(mesh.scale, {
-            x: isWinner ? 1.25 : 1.0,
-            y: isWinner ? 1.25 : 1.0,
-            z: isWinner ? 1.25 : 1.0,
-            duration: 0.5,
-          });
-        });
-      }
-      if (coreMesh) {
-        gsap.to(coreMesh.scale, {
-          x: activeStage === 3 ? 1.0 : 0.01,
-          y: activeStage === 3 ? 1.0 : 0.01,
-          z: activeStage === 3 ? 1.0 : 0.01,
-          duration: 0.5,
-        });
-      }
-    } else if (projectSlug === 'spare-parts') {
-      if (layers[1]) {
-        layers[1].children.forEach((mesh, idx) => {
-          const isCurrent = idx === activeStage;
-          gsap.to(mesh.position, {
-            y: isCurrent ? 0.2 : 0,
-            duration: 0.4,
-          });
-          gsap.to(mesh.scale, {
-            x: isCurrent ? 1.15 : 1.0,
-            y: isCurrent ? 1.15 : 1.0,
-            z: isCurrent ? 1.15 : 1.0,
-            duration: 0.4,
-          });
-        });
-      }
-    }
-  }, [activeStage, mode, projectSlug, stages.length]);
+  }, [projectSlug, stages.length]);
 
   if (isReducedMotion) {
     return (
-      <div className="card-surface p-6">
-        <div className="mb-6">
-          <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-1">
-            {subtitle}
-          </span>
-          <h3 className="font-display text-xl sm:text-2xl font-bold text-ink">{title}</h3>
+      <section className="py-24 px-6 border-t border-surface-border">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
+              Architecture Sequence
+            </span>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-ink">{title}</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {stages.map((st) => (
+              <div key={st.step} className="card-surface p-6">
+                <span className="font-mono text-xs text-signal block mb-1">
+                  {st.step} &bull; {st.tag}
+                </span>
+                <h3 className="font-display text-lg font-semibold text-ink mb-2">{st.title}</h3>
+                <p className="text-sm text-ink-dim leading-relaxed">{st.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {stages.map((st) => (
-            <div key={st.step} className="p-4 rounded-lg bg-bg border border-surface-border">
-              <span className="font-mono text-xs text-signal block mb-1">
-                {st.step} &bull; {st.tag}
-              </span>
-              <h4 className="font-display font-semibold text-ink text-sm mb-1">{st.title}</h4>
-              <p className="text-xs text-ink-dim leading-relaxed">{st.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      </section>
     );
   }
 
   const currentStage = stages[activeStage] || stages[0] || {};
-  const isScroll = mode === 'scroll';
 
   return (
-    <div
-      ref={sectionRef}
-      className={`relative w-full ${
-        isScroll ? 'h-screen' : 'h-[460px] sm:h-[500px] rounded-xl overflow-hidden border border-surface-border bg-bg'
-      }`}
-    >
+    <section ref={sectionRef} className="relative w-full bg-bg border-t border-surface-border">
       <div
         ref={containerRef}
-        className="w-full h-full relative flex items-center justify-center overflow-hidden"
+        className="w-full h-screen relative flex items-center justify-center overflow-hidden"
       >
         {/* 3D WebGL Canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" />
 
-        {/* Section Header Overlay (For scroll mode) */}
-        {isScroll && (
-          <div className="absolute top-20 left-6 sm:left-12 z-20 pointer-events-none">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-2 h-2 rounded-full bg-signal inline-block" />
-              <span className="font-mono text-xs text-signal uppercase tracking-widest">
-                Live Pipeline Deconstruction
-              </span>
-            </div>
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink tracking-tight">
-              {title}
-            </h2>
-            <p className="font-mono text-xs text-ink-dim mt-1">{subtitle}</p>
+        {/* Top Floating Pinned Title */}
+        <div className="absolute top-20 left-6 sm:left-12 z-20 pointer-events-none">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2 h-2 rounded-full bg-signal inline-block" />
+            <span className="font-mono text-xs text-signal uppercase tracking-widest">
+              Live Architecture Deconstruction
+            </span>
           </div>
-        )}
+          <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+            {title}
+          </h2>
+          <p className="font-mono text-xs text-ink-dim mt-1">{subtitle}</p>
+        </div>
 
-        {/* Click Mode: Step Controls Bar */}
-        {!isScroll && (
-          <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1 overflow-x-auto py-1">
-              {stages.map((st, idx) => (
-                <button
-                  key={st.step}
-                  onClick={() => handleStageSelect(idx)}
-                  className={`font-mono text-xs px-2.5 py-1 rounded-md transition-colors duration-200 whitespace-nowrap ${
-                    idx === activeStage
-                      ? 'bg-signal/20 text-signal border border-signal/50 font-bold'
-                      : 'bg-surface/80 text-ink-dim border border-surface-border hover:text-ink'
-                  }`}
-                  aria-label={`Switch to stage ${st.step}: ${st.title}`}
-                >
-                  {st.step} {st.tag.split(' ')[0]}
-                </button>
-              ))}
-            </div>
-
-            <div className="hidden sm:flex items-center gap-1">
-              <button
-                onClick={() => handleStageSelect(Math.max(0, activeStage - 1))}
-                disabled={activeStage === 0}
-                className="p-1.5 rounded bg-surface/80 border border-surface-border text-ink-dim hover:text-signal disabled:opacity-30"
-                aria-label="Previous stage"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleStageSelect(Math.min(stages.length - 1, activeStage + 1))}
-                disabled={activeStage === stages.length - 1}
-                className="p-1.5 rounded bg-surface/80 border border-surface-border text-ink-dim hover:text-signal disabled:opacity-30"
-                aria-label="Next stage"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Dynamic Scrubbed/Selected Stage Callout Card */}
-        <div
-          className={`absolute z-20 ${
-            isScroll
-              ? 'bottom-12 sm:bottom-16 left-6 right-6 sm:left-auto sm:right-12 sm:max-w-md'
-              : 'bottom-4 left-4 right-4 sm:max-w-sm'
-          }`}
-        >
-          <div className="card-surface p-4 sm:p-5 backdrop-blur-md bg-surface/90 border-signal/30 shadow-xl">
+        {/* Dynamic Scrubbed Stage Callout Card */}
+        <div className="absolute bottom-12 sm:bottom-16 left-6 right-6 sm:left-auto sm:right-12 sm:max-w-md z-20">
+          <div className="card-surface p-6 backdrop-blur-md bg-surface/90 border-signal/30 shadow-2xl">
             {/* Stage Progress Bar */}
-            <div className="flex items-center justify-between gap-1 mb-3">
+            <div className="flex items-center justify-between gap-1 mb-4">
               {stages.map((st, idx) => (
                 <div
                   key={st.step}
@@ -542,28 +434,38 @@ const PipelineSequence = ({
               ))}
             </div>
 
-            <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="font-mono text-xs font-bold text-signal tracking-wider uppercase">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="font-mono text-xs font-bold text-signal tracking-widest uppercase">
                 Stage {currentStage.step} &bull; {currentStage.tag}
               </span>
             </div>
 
-            <h3 className="font-display text-base sm:text-lg font-bold text-ink mb-1.5 leading-snug">
+            <h3 className="font-display text-lg sm:text-xl font-bold text-ink mb-2">
               {currentStage.title}
             </h3>
 
-            <p className="text-xs text-ink-dim leading-relaxed mb-3">
+            <p className="text-sm text-ink-dim leading-relaxed mb-4">
               {currentStage.desc}
             </p>
 
-            <div className="flex items-center justify-between pt-2 border-t border-surface-border text-xs font-mono text-ink-dim">
-              <span>{projectSlug.toUpperCase()}</span>
-              <span className="text-signal">Active Layer {activeStage + 1}/{stages.length}</span>
+            <div className="flex items-center justify-between pt-3 border-t border-surface-border text-xs font-mono text-ink-dim">
+              <span>{projectSlug.toUpperCase()} RUNTIME</span>
+              <span className="text-signal">Layer {activeStage + 1} / {stages.length}</span>
             </div>
           </div>
         </div>
+
+        {/* Scroll Indicator Prompt */}
+        <div
+          className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 font-mono text-xs text-ink-dim transition-opacity duration-300 ${
+            activeStage === 0 ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <span>Scroll to scrub</span>
+          <ChevronDown className="w-3.5 h-3.5 text-signal animate-bounce" />
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

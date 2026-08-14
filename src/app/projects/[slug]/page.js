@@ -1,10 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { projectsData } from '../../data/projects';
 import PipelineSequence from '../../components/sequences/PipelineSequence';
-import { ArrowLeft, Github, ExternalLink, Activity, CheckCircle, Clock, Shield } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink, Activity, CheckCircle, Code2, Layers } from 'lucide-react';
 
 export async function generateStaticParams() {
   return projectsData.map((project) => ({
@@ -18,7 +17,7 @@ export async function generateMetadata({ params }) {
   if (!project) return { title: 'Project Not Found' };
 
   return {
-    title: `${project.title} — Case Study | Muhammad Abdullah`,
+    title: `${project.title} — Technical Case Study | Muhammad Abdullah`,
     description: project.summary,
   };
 }
@@ -31,11 +30,9 @@ export default async function ProjectCaseStudyPage({ params }) {
     notFound();
   }
 
-  const isGuardianSense = project.slug === 'guardiansense';
-
   return (
     <div className="min-h-screen bg-bg text-ink">
-      {/* Top Header Bar */}
+      {/* Minimal Project-Specific Header */}
       <header className="sticky top-0 z-50 bg-bg/95 backdrop-blur-md border-b border-surface-border py-4 px-6">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <Link
@@ -46,14 +43,32 @@ export default async function ProjectCaseStudyPage({ params }) {
             <span>Back to Overview</span>
           </Link>
 
-          <span className="font-mono text-xs text-signal uppercase tracking-wider">
-            {project.category}
-          </span>
+          <div className="hidden sm:flex items-center gap-6 text-xs font-mono text-ink-dim">
+            <a href="#overview" className="hover:text-signal transition-colors duration-200">
+              Overview
+            </a>
+            <a href="#architecture-sequence" className="hover:text-signal transition-colors duration-200">
+              Architecture
+            </a>
+            <a href="#stack" className="hover:text-signal transition-colors duration-200">
+              Stack
+            </a>
+          </div>
+
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-signal hover:text-ink transition-colors duration-200"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
         </div>
       </header>
 
-      {/* Hero Header */}
-      <section className="pt-16 pb-12 px-6">
+      {/* Hero Overview */}
+      <section id="overview" className="pt-16 pb-12 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-2 mb-3">
             <span className="font-mono text-xs text-signal uppercase">{project.category}</span>
@@ -69,7 +84,7 @@ export default async function ProjectCaseStudyPage({ params }) {
             {project.subtitle}
           </p>
 
-          {/* Quick Metrics Banner */}
+          {/* Metrics Banner */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             {project.metrics.map((m) => (
               <div key={m.label} className="p-4 rounded-xl bg-surface border border-surface-border">
@@ -80,58 +95,29 @@ export default async function ProjectCaseStudyPage({ params }) {
               </div>
             ))}
           </div>
-
-          {/* Action Links */}
-          <div className="flex flex-wrap gap-4 pt-2">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-surface border border-signal/40 text-signal hover:bg-surface-hover hover:border-signal text-sm font-medium transition-colors duration-200"
-            >
-              <Github className="w-4 h-4" />
-              <span>Source Repository</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* Flagship Sequence Section */}
-      {isGuardianSense ? (
-        <section className="w-full">
-          <PipelineSequence
-            projectSlug={project.slug}
-            stages={project.stages}
-            mode="scroll"
-            title={project.title}
-            subtitle="Scroll to scrub continuous on-device inference pipeline"
-          />
-        </section>
-      ) : (
-        <section className="py-8 px-6">
-          <div className="max-w-4xl mx-auto">
-            <PipelineSequence
-              projectSlug={project.slug}
-              stages={project.stages}
-              mode="click"
-              title={project.title}
-              subtitle="Interactive Architecture Pipeline"
-            />
-          </div>
-        </section>
-      )}
+      {/* Pinned Scroll-Scrubbed 3D Sequence */}
+      <section id="architecture-sequence" className="w-full">
+        <PipelineSequence
+          projectSlug={project.slug}
+          stages={project.stages}
+          title={project.title}
+          subtitle={`Scroll to scrub through ${project.title}'s operational pipeline`}
+        />
+      </section>
 
       {/* Case Study Deep Dive */}
-      <section className="py-20 px-6 border-t border-surface-border">
+      <section id="stack" className="py-20 px-6 border-t border-surface-border">
         <div className="max-w-4xl mx-auto space-y-12">
           {/* Executive Overview */}
           <div>
             <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
-              System Overview
+              System Context
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-4">
-              Problem &amp; Engineering Solution
+              Overview &amp; Implementation
             </h2>
             <p className="text-ink-dim text-base sm:text-lg leading-relaxed">
               {project.overview}
@@ -141,16 +127,16 @@ export default async function ProjectCaseStudyPage({ params }) {
           {/* Architecture Pillars */}
           <div>
             <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
-              Technical Implementation
+              Technical Breakdown
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-6">
-              Core Architecture Highlights
+              Engineering Architecture
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {project.architectureDetails.map((detail, idx) => (
                 <div key={detail.title} className="card-surface p-6">
                   <span className="font-mono text-xs text-signal block mb-2">
-                    0{idx + 1} &bull; CORE PILLAR
+                    0{idx + 1} &bull; CORE COMPONENT
                   </span>
                   <h3 className="font-display text-base font-semibold text-ink mb-2">
                     {detail.title}
@@ -163,13 +149,13 @@ export default async function ProjectCaseStudyPage({ params }) {
             </div>
           </div>
 
-          {/* Technology Stack Grid */}
+          {/* Stack */}
           <div>
             <span className="font-mono text-xs text-signal tracking-widest uppercase block mb-2">
-              Technologies &amp; Libraries
+              Verified Stack
             </span>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-4">
-              Production Stack
+              Technologies &amp; Libraries
             </h2>
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
@@ -182,22 +168,38 @@ export default async function ProjectCaseStudyPage({ params }) {
               ))}
             </div>
           </div>
+
+          {/* GitHub Action */}
+          <div className="pt-6 border-t border-surface-border flex items-center justify-between flex-wrap gap-4">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-surface border border-signal/40 text-signal hover:bg-surface-hover hover:border-signal text-sm font-medium transition-colors duration-200"
+            >
+              <Github className="w-4 h-4" />
+              <span>Inspect Source on GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-xs font-mono text-ink-dim hover:text-signal transition-colors duration-200"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Return to Portfolio Home</span>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Footer Navigation */}
-      <footer className="py-12 px-6 border-t border-surface-border">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-sm font-mono text-signal hover:text-ink transition-colors duration-200"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Portfolio Home</span>
+      {/* Footer */}
+      <footer className="py-10 px-6 border-t border-surface-border">
+        <div className="max-w-4xl mx-auto flex justify-between items-center text-xs font-mono text-ink-dim">
+          <span>&copy; 2026 Muhammad Abdullah</span>
+          <Link href="/" className="text-signal hover:underline">
+            Home
           </Link>
-          <span className="font-mono text-xs text-ink-dim">
-            &copy; 2026 Muhammad Abdullah
-          </span>
         </div>
       </footer>
     </div>
