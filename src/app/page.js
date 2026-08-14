@@ -3,6 +3,7 @@
 import React from 'react';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
+import ArchitectureSequence from './components/ArchitectureSequence';
 import AboutSection from './components/AboutSection';
 import WorkSection from './components/WorkSection';
 import ProjectsSection from './components/ProjectsSection';
@@ -17,6 +18,7 @@ const Portfolio = () => {
       <Navigation />
       <main>
         <HeroSection />
+        <ArchitectureSequence />
         <AboutSection />
         <WorkSection />
         <ProjectsSection />
