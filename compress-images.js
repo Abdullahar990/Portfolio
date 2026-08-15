@@ -10,6 +10,7 @@ const images = [
   "Spare.jpg",
   "Traffic.jpg",
   "DPA.jpg",
+  "GS.jpg",
   "Deep_learning_AI.png",
   "profile_pic.jpeg"
 ];

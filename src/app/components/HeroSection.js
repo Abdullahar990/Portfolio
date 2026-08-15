@@ -35,7 +35,7 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] flex flex-col justify-center px-6 pt-24 pb-16"
+      className="relative min-h-[90dvh] flex flex-col justify-center px-6 pt-24 pb-16"
     >
       {/* Background grid accent (static, subtle) */}
       <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden="true" />
@@ -124,7 +124,7 @@ const HeroSection = () => {
           {/* Profile Photo */}
           <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-surface-border overflow-hidden bg-surface flex-shrink-0">
             <Image
-              src="/Abdullah_linkedIn pic.png"
+              src="/abdullah-profile.png"
               alt="Muhammad Abdullah"
               fill
               className="object-cover"

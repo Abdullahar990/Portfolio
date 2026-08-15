@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { projectsData } from '../../data/projects';
@@ -94,6 +95,18 @@ export default async function ProjectCaseStudyPage({ params }) {
                 <span className="font-mono text-xs text-ink-dim">{m.label}</span>
               </div>
             ))}
+          </div>
+
+          {/* Project Interface Hero Image */}
+          <div className="relative w-full h-56 sm:h-80 lg:h-96 rounded-xl overflow-hidden border border-surface-border mt-8">
+            <Image
+              src={project.image}
+              alt={`${project.title} interface`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 896px"
+              quality={85}
+            />
           </div>
         </div>
       </section>

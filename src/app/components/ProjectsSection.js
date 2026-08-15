@@ -26,7 +26,7 @@ const GuardianSenseFeatureCard = ({ project }) => {
             fill
             className="object-cover"
             quality={85}
-            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-surface" />
           <div className="absolute top-4 left-4">
