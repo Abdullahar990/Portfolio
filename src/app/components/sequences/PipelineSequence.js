@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, Activity, Layers, Cpu, Database, CheckCircle2 } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 const PipelineSequence = ({
   projectSlug = 'guardiansense',
@@ -34,12 +34,15 @@ const PipelineSequence = ({
     }
 
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    ScrollTrigger.normalizeScroll(true);
 
     const canvas = canvasRef.current;
     if (!canvas || !containerRef.current || !sectionRef.current) return;
 
     const width = containerRef.current.clientWidth || window.innerWidth;
     const height = containerRef.current.clientHeight || window.innerHeight;
+    const isMobile = window.innerWidth < 768;
 
     // ── Three.js Scene Setup ──
     const scene = new THREE.Scene();
@@ -50,12 +53,12 @@ const PipelineSequence = ({
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
-      antialias: true,
+      antialias: !isMobile, // Skip MSAA on mobile for GPU efficiency
       alpha: true,
       powerPreference: 'high-performance',
     });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5));
 
     // ── Lighting ──
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -90,17 +93,28 @@ const PipelineSequence = ({
       emissiveIntensity: 0.15,
     });
 
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x3dd6c4,
-      transmission: 0.75,
-      opacity: 0.9,
-      transparent: true,
-      roughness: 0.1,
-      ior: 1.5,
-      thickness: 0.4,
-      emissive: 0x3dd6c4,
-      emissiveIntensity: 0.2,
-    });
+    // Swap expensive glass physical transmission material for cheaper standard material on mobile
+    const glassMat = isMobile
+      ? new THREE.MeshStandardMaterial({
+          color: 0x3dd6c4,
+          roughness: 0.15,
+          metalness: 0.3,
+          emissive: 0x3dd6c4,
+          emissiveIntensity: 0.25,
+          transparent: true,
+          opacity: 0.85,
+        })
+      : new THREE.MeshPhysicalMaterial({
+          color: 0x3dd6c4,
+          transmission: 0.75,
+          opacity: 0.9,
+          transparent: true,
+          roughness: 0.1,
+          ior: 1.5,
+          thickness: 0.4,
+          emissive: 0x3dd6c4,
+          emissiveIntensity: 0.2,
+        });
 
     const createBoxWithEdges = (w, h, d, mat) => {
       const g = new THREE.Group();
@@ -115,12 +129,14 @@ const PipelineSequence = ({
     const rootGroup = new THREE.Group();
     scene.add(rootGroup);
 
-    // Setup master GSAP ScrollTrigger timeline
+    // Setup master GSAP ScrollTrigger timeline with responsive pin distance
+    const scrollDistance = isMobile ? 1400 : 2600;
+
     const masterTl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
         start: 'top top',
-        end: '+=2600',
+        end: `+=${scrollDistance}`,
         scrub: 1,
         pin: true,
         anticipatePin: 1,
@@ -149,7 +165,8 @@ const PipelineSequence = ({
       sensor.add(createBoxWithEdges(2.8, 0.1, 1.5, sensorMat));
       const waveGeom = new THREE.BufferGeometry();
       const points = [];
-      for (let i = -1.2; i <= 1.2; i += 0.08) {
+      const waveStep = isMobile ? 0.16 : 0.08;
+      for (let i = -1.2; i <= 1.2; i += waveStep) {
         points.push(new THREE.Vector3(i, 0.08, Math.sin(i * 6) * 0.3));
       }
       waveGeom.setFromPoints(points);
@@ -161,8 +178,10 @@ const PipelineSequence = ({
       neural.add(new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.2, 1.3), glassMat));
       const nodeGeom = new THREE.SphereGeometry(0.04, 8, 8);
       const nodeMat = new THREE.MeshBasicMaterial({ color: 0x3dd6c4 });
-      for (let x = -0.8; x <= 0.8; x += 0.4) {
-        for (let z = -0.4; z <= 0.4; z += 0.4) {
+      const xStep = isMobile ? 0.8 : 0.4;
+      const zStep = isMobile ? 0.8 : 0.4;
+      for (let x = -0.8; x <= 0.8; x += xStep) {
+        for (let z = -0.4; z <= 0.4; z += zStep) {
           const n = new THREE.Mesh(nodeGeom, nodeMat);
           n.position.set(x, 0.15, z);
           neural.add(n);
@@ -263,10 +282,13 @@ const PipelineSequence = ({
       const ringGroup = new THREE.Group();
       rootGroup.add(ringGroup);
 
-      for (let i = 0; i < 24; i++) {
-        const angle = (i / 24) * Math.PI * 2;
+      const nodeCount = isMobile ? 12 : 24;
+      const kNearestCount = isMobile ? 5 : 10;
+
+      for (let i = 0; i < nodeCount; i++) {
+        const angle = (i / nodeCount) * Math.PI * 2;
         const radius = 1.2 + (i % 3) * 0.6;
-        const isKNearest = i < 10;
+        const isKNearest = i < kNearestCount;
         const node = new THREE.Mesh(
           new THREE.SphereGeometry(isKNearest ? 0.1 : 0.06, 8, 8),
           new THREE.MeshStandardMaterial({
@@ -364,6 +386,7 @@ const PipelineSequence = ({
         cancelAnimationFrame(currentScene.reqId);
       }
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      ScrollTrigger.normalizeScroll(false);
       renderer.dispose();
     };
   }, [projectSlug, stages.length]);
@@ -400,28 +423,28 @@ const PipelineSequence = ({
     <section ref={sectionRef} className="relative w-full bg-bg border-t border-surface-border">
       <div
         ref={containerRef}
-        className="w-full h-screen relative flex items-center justify-center overflow-hidden"
+        className="w-full h-[100dvh] relative flex items-center justify-center overflow-hidden"
       >
         {/* 3D WebGL Canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-0" />
 
         {/* Top Floating Pinned Title */}
-        <div className="absolute top-20 left-6 sm:left-12 z-20 pointer-events-none">
+        <div className="absolute top-16 sm:top-20 left-4 sm:left-12 z-20 pointer-events-none max-w-[70%] sm:max-w-none">
           <div className="flex items-center gap-2 mb-1.5">
             <span className="w-2 h-2 rounded-full bg-signal inline-block" />
             <span className="font-mono text-xs text-signal uppercase tracking-widest">
               Live Architecture Deconstruction
             </span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+          <h2 className="font-display text-xl sm:text-3xl font-bold text-ink tracking-tight">
             {title}
           </h2>
           <p className="font-mono text-xs text-ink-dim mt-1">{subtitle}</p>
         </div>
 
         {/* Dynamic Scrubbed Stage Callout Card */}
-        <div className="absolute bottom-12 sm:bottom-16 left-6 right-6 sm:left-auto sm:right-12 sm:max-w-md z-20">
-          <div className="card-surface p-6 backdrop-blur-md bg-surface/90 border-signal/30 shadow-2xl">
+        <div className="absolute bottom-6 sm:bottom-16 left-4 right-4 sm:left-auto sm:right-12 sm:max-w-md z-20 max-h-[45dvh] overflow-y-auto">
+          <div className="card-surface p-5 sm:p-6 backdrop-blur-md bg-surface/90 border-signal/30 shadow-2xl">
             {/* Stage Progress Bar */}
             <div className="flex items-center justify-between gap-1 mb-4">
               {stages.map((st, idx) => (
@@ -444,7 +467,7 @@ const PipelineSequence = ({
               {currentStage.title}
             </h3>
 
-            <p className="text-sm text-ink-dim leading-relaxed mb-4">
+            <p className="text-xs sm:text-sm text-ink-dim leading-relaxed mb-4">
               {currentStage.desc}
             </p>
 
@@ -457,7 +480,7 @@ const PipelineSequence = ({
 
         {/* Scroll Indicator Prompt */}
         <div
-          className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 font-mono text-xs text-ink-dim transition-opacity duration-300 ${
+          className={`hidden sm:flex absolute bottom-6 left-1/2 -translate-x-1/2 z-20 items-center gap-1.5 font-mono text-xs text-ink-dim transition-opacity duration-300 ${
             activeStage === 0 ? 'opacity-100' : 'opacity-0'
           }`}
         >
