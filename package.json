@@ -1,31 +1,53 @@
 {
-  "name": "my-app",
+  "name": "muhammad-abdullah-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint src scripts eslint.config.mjs next.config.mjs --max-warnings=0",
+    "dev:webpack": "next dev --webpack",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write src scripts *.json *.mjs",
+    "format:check": "prettier --check src scripts *.json *.mjs",
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "check:production": "node scripts/check-production.mjs",
+    "check:site": "node scripts/check-site.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run build && npm run check:production"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
     "gsap": "^3.15.0",
+    "lenis": "^1.3.26",
     "lucide-react": "^0.525.0",
-    "next": "^15.5.12",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-icon": "^1.0.0",
-    "react-icons": "^5.5.0",
-    "react-intersection-observer": "^9.16.0",
+    "motion": "^14.0.0",
+    "next": "^16.4.0",
+    "react": "~19.1.9",
+    "react-dom": "~19.1.9",
     "three": "^0.185.1",
     "tinify": "^1.8.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@playwright/mcp": "^0.0.83",
     "@tailwindcss/postcss": "^4",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.185.4",
+    "axe-core": "^4.14.0",
+    "chrome-devtools-mcp": "^1.10.1",
     "eslint": "^9",
-    "eslint-config-next": "15.4.3",
+    "eslint-config-next": "^16.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.9",
     "tailwindcss": "^4",
-    "tinypng": "^0.1.1"
-  }
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "npm@11.11.0"
 }

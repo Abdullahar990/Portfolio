@@ -32,6 +32,12 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# Local browser verification artifacts
+.playwright-mcp/
+test-results/
+playwright-report/
 
 # vercel
 .vercel
@@ -39,3 +45,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Verified project-local Node runtime
+.tools/

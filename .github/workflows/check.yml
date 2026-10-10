@@ -1,0 +1,66 @@
+name: Portfolio checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # A test-only origin proves metadata generation without inventing the owner's domain.
+      SITE_URL: https://portfolio-ci.example
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install the locked dependencies
+        run: npm ci
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+      - name: Check TypeScript
+        run: npm run typecheck
+      - name: Check lint
+        run: npm run lint
+      - name: Check formatting
+        run: npm run format:check
+      - name: Build production assets
+        run: npm run build
+      - name: Reject development instrumentation
+        run: npm run check:production
+      - name: Verify the production HTTP contract
+        env:
+          TEST_BASE_URL: http://127.0.0.1:3100
+        run: |
+          npm start -- --hostname 127.0.0.1 --port 3100 > /tmp/portfolio-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent "$TEST_BASE_URL" > /dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat /tmp/portfolio-server.log
+            exit 1
+          fi
+          npm run check:site

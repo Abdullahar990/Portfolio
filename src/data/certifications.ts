@@ -1,0 +1,47 @@
+export const certifications = [
+  {
+    title: 'Neural Networks and Deep Learning',
+    issuer: 'DeepLearning.AI',
+    platform: 'Coursera',
+    date: 'June 2025',
+    credentialId: 'IPV24OTKOOJD',
+    image: '/Deep_learning_AI.png',
+    description:
+      'Fundamentals of deep learning architectures, forward and backward propagation, vectorization, and neural network training in Python and TensorFlow.',
+    skills: ['Neural Networks', 'Deep Learning', 'TensorFlow', 'Vectorization'],
+    hours: '24 hours',
+    grade: '98%',
+    projects: '3 Projects',
+    verifyLink: 'https://www.coursera.org/account/accomplishments/verify/IPV24OTKOOJD',
+  },
+  {
+    title: 'Improving Deep Neural Networks: Hyperparameter Tuning, Regularization and Optimization',
+    issuer: 'DeepLearning.AI',
+    platform: 'Coursera',
+    date: 'June 2025',
+    credentialId: 'YTQ2KN22J7EB',
+    image: '/Deep_learning_AI.png',
+    description:
+      'Practical optimization techniques including L2 regularization, Dropout, Xavier initialization, Batch Normalization, and Adam/RMSprop optimizers.',
+    skills: ['Hyperparameter Tuning', 'Regularization', 'Optimization', 'Dropout', 'Batch Norm'],
+    hours: '23 hours',
+    grade: '98%',
+    projects: '3 Projects',
+    verifyLink: 'https://www.coursera.org/account/accomplishments/verify/YTQ2KN22J7EB',
+  },
+  {
+    title: 'Structuring Machine Learning Projects',
+    issuer: 'DeepLearning.AI',
+    platform: 'Coursera',
+    date: 'July 2025',
+    credentialId: 'BUXF8C3JNKTG',
+    image: '/Deep_learning_AI.png',
+    description:
+      'Strategies for ML project execution: error analysis, orthogonalization, bias/variance management, transfer learning, and multi-task learning.',
+    skills: ['ML Strategy', 'Error Analysis', 'Bias-Variance Tradeoff', 'ML System Design'],
+    hours: '6 hours',
+    grade: '96%',
+    projects: '2 Projects',
+    verifyLink: 'https://www.coursera.org/account/accomplishments/verify/BUXF8C3JNKTG',
+  },
+];

@@ -1,98 +1,76 @@
-# 🌐 Muhammad Abdullah – Portfolio
+# Muhammad Abdullah — developer portfolio
 
-👋 Hi there! I’m **Muhammad Abdullah**, a passionate **Computer Science student at FAST University Lahore (Batch 2022–2026)**.  
-I specialize in **Artificial Intelligence, Machine Learning, and Full-Stack Web Development**, and I love building intelligent, efficient, and user-friendly systems.
+An editorial portfolio for a full-stack AI developer in Lahore, built with Next.js App Router, React and strict TypeScript. The home page introduces the developer, selected work, experience, skills and course certificates. Four case studies explain the projects through readable narratives and lightweight system diagrams.
 
----
+The site uses a warm paper, ink and rust palette, server-rendered reading content, responsive layouts and reduced-motion fallbacks. An original Three.js sculpture is progressively loaded on the home page. All animation tools used by the site are free; Motion Studio and subscription-based editing are not required.
 
-## 🧠 About Me
+## Run locally
 
-I’m an aspiring **AI Engineer** and **Full-Stack Developer** with experience across computer vision, deep learning, and modern web technologies.  
-My work revolves around building intelligent systems that solve real-world problems, from accident detection to disease prediction and hotel management.
+Use Node.js 24 LTS and npm. The lockfile is the source of truth for package versions.
 
-- 🎓 **Bachelor of Computer Science** – FAST University, Lahore (2022–2026)
-- 💻 Passionate about **AI, ML, Deep Learning, and Cloud Technologies**
-- 🚀 Currently exploring **MLOps**, **Edge AI**, and **Smart Systems**
-
----
-
-## 💼 Experience
-
-### 🔹 **Computer Vision & Deep Learning Intern** – *ML-Bench* (Jun 2025 – Aug 2025)
-- Built deep learning pipelines for image analysis using **CNNs**, **OpenCV**, and **TensorFlow**  
-- Tuned hyperparameters to improve model accuracy and efficiency  
-- Collaborated with cross-functional teams to deploy ML models in production  
-
-### 🔹 **AI Intern** – *Datics AI* (Jul 2024 – Sep 2024)
-- Developed **NLP models** using Python, Pandas, and Scikit-learn  
-- Built chatbot prototypes capable of handling contextual queries  
-- Performed data preprocessing, feature engineering, and evaluation  
-
-### 🔹 **Web Developer** – *CodeAlpha* (Jun 2024 – Jul 2024)
-- Designed and developed **responsive UIs** using React, HTML, CSS, and JavaScript  
-- Improved website performance and accessibility  
-- Focused on modern UX with optimized page load times  
-
----
-
-## 🧰 Skills
-
-**Languages:** Python, JavaScript, C++, C, SQL  
-**Frameworks & Libraries:** TensorFlow, Keras, Scikit-learn, OpenCV  
-**Web Technologies:** React, Next.js, Node.js, Express, Flask  
-**Databases:** PostgreSQL, MongoDB, MySQL  
-**Tools:** Git, Docker, Bootstrap, Tailwind CSS  
-**Practices:** Agile, Scrum, OOP, SOLID Principles  
-
----
-
-## 🚀 Featured Projects
-
-### 🧩 [Vehicle Detection System](#)
-> **Tech:** Flask, YOLOv11, OpenCV  
-Real-time vehicle detection with analytics dashboard for traffic monitoring and entry/exit statistics.
-
-### 🏨 [Check INN, Chill Out](#)
-> **Tech:** MERN Stack  
-Full-stack hotel management system featuring booking, room management, and JWT-based authentication.
-
-### 🧬 [Disease Prediction System](#)
-> **Tech:** Python, ML  
-Predicts diseases using patient symptoms and trained machine learning models.
-
-### ⚙️ [Spare Parts Management System](#)
-> **Tech:** PHP, MySQL, Bootstrap  
-Dynamic inventory tracking system with responsive UI and real-time stock management.
-
----
-
-## 🏅 Certifications
-- **Deep Learning Specialization (5 Courses)**  
-  *Neural Networks, Hyperparameter Tuning, Structuring ML Projects, CNNs, Sequence Models*  
-  *(Coursera / Andrew Ng)*
-
----
-
-## 🌍 Portfolio Overview
-
-This repository showcases my **personal developer portfolio**, built using **Next.js**.  
-It highlights my experience, technical skills, and featured projects, designed to create a strong professional presence.
-
-### 🔧 Tech Stack
-- **Frontend:** Next.js, React, Tailwind CSS  
-- **Backend:** Node.js API routes  
-- **Deployment:** Vercel  
-- **Version Control:** Git & GitHub  
-
-### ⚡ Setup Instructions
-```bash
-# Clone repository
-git clone https://github.com/Abdullahar990/Portfolio.git
-cd Portfolio
-
-# Install dependencies
-npm install
-
-# Run development server
+```sh
+npm ci
 npm run dev
+```
 
+Open [localhost:3000](http://localhost:3000). On this workspace's Mac, the verified local runtime is also available without changing the system Node installation:
+
+```sh
+export PATH="$PWD/.tools/node-v24.21.0-darwin-arm64/bin:$PATH"
+```
+
+The normal development command uses Turbopack. `npm run dev:webpack` is available when Webpack is needed. Stop the current development server before switching bundlers.
+
+## Verify and build
+
+```sh
+npm run verify
+npm start
+```
+
+`verify` runs TypeScript, ESLint, formatting, a production build and the production asset scan. Production builds use Webpack. With the production server running, the browser checks can be run separately:
+
+```sh
+TEST_BASE_URL=http://localhost:3000 TEST_PRODUCTION=1 npm run test:browser
+TEST_BASE_URL=http://localhost:3000 npm run check:site
+```
+
+The browser script uses the actual Playwright MCP server. It checks content, responsive layouts, keyboard interactions, architecture links, reduced motion and browser console errors. Verification artifacts go into the ignored `test-results/` directory.
+
+## Project structure
+
+```text
+src/
+  app/                       Pages, metadata routes and global styles
+  components/
+    sections/                Home page sections
+    projects/                Conceptual covers and architecture flow
+    three/                   Progressive 3D visual and scene utilities
+    ui/                      Navigation, footer and shared headings
+  scenes/                    Original home page sculpture
+  data/                      Projects, experience and course certificates
+  hooks/                     Media queries and lifecycle utilities
+  lib/                       Shared types, site identity and SEO helpers
+  animations/                Optional smooth scrolling utility
+public/                      Portrait, project illustrations and résumé
+scripts/                     Browser, SEO and production verification
+```
+
+Edit `src/data/projects.ts` for case study content. Each project includes its summary, implementation, architecture stages, scope and next iteration. The image assets on the home page are project illustrations; the case study covers are conceptual diagrams, not screenshots of deployed products.
+
+The selected projects are [Guardian Sense](https://github.com/Abdullahar990/GuardianSense), [Check INN, Chill Out](https://github.com/Abdullahar990/check-inn-chill-out), [Disease Prediction System](https://github.com/Abdullahar990/Disease-Prediction-App) and [Spare Parts Management](https://github.com/Abdullahar990/Spare-Parts-Management-System). Case studies distinguish demonstrated functionality from proposed improvements. Owner-provided experience figures and reported Guardian Sense benchmarks are retained.
+
+## Deploy
+
+Use Vercel's Next.js preset with Node.js 24, `npm ci` and `npm run build`. Set the server-only `SITE_URL` environment variable to the real public origin when using a custom domain. On Vercel, the production hostname provides the fallback; preview deployments remain non-indexable. The site does not require API credentials to run.
+
+Follow the [deployment guide](docs/DEPLOYMENT.md) for URL configuration, environment variables and release checks. Keep credentials out of source, `NEXT_PUBLIC_*` variables and git history.
+
+## Design and development notes
+
+- [Deployment readiness plan](docs/DEPLOYMENT-READINESS-PLAN.md)
+- [Home page design plan](docs/DESIGN-PLAN.md)
+- [Project page design plan](docs/PROJECT-PAGE-PLAN.md)
+- [Development environment and MCP status](docs/DEVELOPMENT.md)
+
+MCP tools are development services configured in Codex, separate from the deployed website. Some integrations need account authentication and a Codex reload; configuration alone is not proof that a server is working.
